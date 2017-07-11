@@ -14,7 +14,7 @@ import java.util.HashMap;
 
 
 public class ApiWrapper {
-    private Api_Client mApi = new Api_Client("2005781ff6d550b673738c0a057390d1", "498b7bb03bb0c8fe37a68d5dd19ecfb6");
+    private Api_Client mApi = new Api_Client("", "");
     private String mCoinType;
 
     public ApiWrapper(String coinType) {
