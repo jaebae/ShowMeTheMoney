@@ -19,4 +19,8 @@ public class TradePresenter {
 
         setAdapter();
     }
+
+    public void reloadList() {
+        mModel.reload();
+    }
 }

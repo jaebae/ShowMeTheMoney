@@ -103,5 +103,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
 
         tv = (TextView) findViewById(R.id.krw);
         tv.setText("현금 : " + mRealMoney);
+
+        mPresenter.reloadList();
     }
 }

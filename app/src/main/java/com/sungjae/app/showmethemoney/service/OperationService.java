@@ -62,7 +62,7 @@ public class OperationService extends Service {
     }
 
 
-    private void doOperation() {
+    protected void doOperation() {
         try {
             Currency c = mApi.getCurrency();
             Balance b = mApi.getBalance(c);
@@ -87,8 +87,12 @@ public class OperationService extends Service {
 
         } catch (Exception e) {
             Log.e("OperationSvc", e.getMessage());
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            ShowErrorToast(e);
         }
+    }
+
+    protected void ShowErrorToast(Exception e) {
+        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private void updateView(Currency c, Balance b) {
@@ -101,7 +105,7 @@ public class OperationService extends Service {
         getApplicationContext().sendBroadcast(intent);
     }
 
-    private void insertDB(ArrayList<Result> results) {
+    protected void insertDB(ArrayList<Result> results) {
         ContentResolver cr = getContentResolver();
         Uri uri = Uri.parse("content://trade");
 

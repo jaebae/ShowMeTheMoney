@@ -77,6 +77,10 @@ public class TradeModel implements LoaderManager.LoaderCallbacks<Cursor> {
         mDataListener.remove(listener);
     }
 
+    public void reload() {
+        mLoaderManager.restartLoader(10, null, this);
+    }
+
     public interface ModelDataListener {
         void onLoadFinished(Cursor cursor);
     }
