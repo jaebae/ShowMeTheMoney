@@ -5,7 +5,7 @@ public class Balance {
     private float mRealMoney;
     private Currency mCurrency;
 
-    private final static float mMinRate = 2.f; // 2%
+    private final static float mMinRate = 3.f; // 3%
 
     public Balance(float bitMoney, float realMoney, Currency currency) {
         mBitMoney = bitMoney;

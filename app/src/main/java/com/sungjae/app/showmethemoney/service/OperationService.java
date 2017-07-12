@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 
 public class OperationService extends Service {
-    private final static String COIN = "ETC";
+    private final static String COIN = "ETH";
     ApiWrapper mApi = new ApiWrapper(COIN);
 
     public OperationService() {
@@ -44,14 +44,16 @@ public class OperationService extends Service {
         operationThread.start();
     }
 
+    Handler mHandler;
     @NonNull
     private Handler getHandler() {
-        return new Handler(getLooperHandlerThread()) {
+        mHandler =  new Handler(getLooperHandlerThread()) {
             @Override
             public void handleMessage(Message msg) {
                 doOperation();
             }
         };
+        return mHandler;
     }
 
     @NonNull
@@ -136,9 +138,7 @@ public class OperationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Log.d("OperationService", "onStartCommand");
-
+        mHandler.sendEmptyMessage(0);
         return super.onStartCommand(intent, flags, startId);
     }
 }

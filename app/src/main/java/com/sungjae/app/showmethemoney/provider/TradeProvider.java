@@ -70,8 +70,10 @@ public class TradeProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL(getDropTableQuery());
-            db.execSQL(getCreateTableQuery());
+            db.execSQL(getDropTradeTableQuery());
+            db.execSQL(getDropCurrencyTableQuery());
+            db.execSQL(getCreateTradeTableQuery());
+            db.execSQL(getCreateCurrencyTableQuery());
         }
 
         @Override
@@ -79,7 +81,7 @@ public class TradeProvider extends ContentProvider {
 
         }
 
-        private String getCreateTableQuery() {
+        private String getCreateTradeTableQuery() {
             return "CREATE TABLE IF NOT EXISTS TRADE " +
                     "( _id integer PRIMARY KEY, " +
                     " date long, " +
@@ -90,8 +92,21 @@ public class TradeProvider extends ContentProvider {
                     " amount text )";
         }
 
-        private String getDropTableQuery() {
+        private String getCreateCurrencyTableQuery() {
+            return "CREATE TABLE IF NOT EXISTS CURRENCY " +
+                    "( _id integer PRIMARY KEY, " +
+                    " date long, " +
+                    " coin text, " +
+                    " sell text, " +
+                    " buy text ) ";
+        }
+
+        private String getDropTradeTableQuery() {
             return "DROP TABLE IF EXISTS TRADE";
+        }
+
+        private String getDropCurrencyTableQuery() {
+            return "DROP TABLE IF EXISTS CURRENCY";
         }
 
     }

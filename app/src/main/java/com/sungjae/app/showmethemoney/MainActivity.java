@@ -20,28 +20,39 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mBuy = savedInstanceState.getFloat("buy");
+            mSell = savedInstanceState.getFloat("sell");
+            mBitMoney = savedInstanceState.getFloat("bit_money");
+            mRealMoney = savedInstanceState.getFloat("real_money");
+        }
+
         setContentView(R.layout.activity_main);
 
         mListView = (ListView) findViewById(R.id.list);
         mPresenter = new TradePresenter(this, new TradeModel(this, getLoaderManager()));
         onCreateView();
 
+
+        registerBroadcastReceivers();
         Intent intent = new Intent("android.intent.action.LAUNCH_APP");
         this.sendBroadcast(intent);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterBroadcastReceivers();
+        super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateView();
-        registerBroadcastReceivers();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterBroadcastReceivers();
-    }
 
     @Override
     public void onCreateView() {
@@ -76,9 +87,22 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             mRealMoney = (int) intent.getFloatExtra("realMoney", 0.f);
 
             updateView();
-
         }
     };
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putFloat("buy", mBuy);
+        outState.putFloat("sell", mSell);
+        outState.putFloat("bit_money", mBitMoney);
+        outState.putFloat("real_money", mRealMoney);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 
     private void updateView() {
         TextView tv = (TextView) findViewById(R.id.buy);
