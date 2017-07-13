@@ -1,5 +1,6 @@
 package com.sungjae.app.showmethemoney.service.api;
 
+import com.sungjae.app.showmethemoney.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
 import com.sungjae.app.showmethemoney.service.api.model.Result;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 
 
 public class ApiWrapper {
-    private Api_Client mApi = new Api_Client("", "");
+    private Api_Client mApi = new Api_Client(ConfigurationConstants.CONNECT_KEY, ConfigurationConstants.SECRET_KEY);
     private String mCoinType;
 
     public ApiWrapper(String coinType) {
