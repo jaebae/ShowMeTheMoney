@@ -4,10 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Created by bennj on 2017-07-13.
- */
-
 public class ConfigurationConstants {
     private static final String CONFIG_FILE_NAME = "config.properties";
     private static final Properties prop;

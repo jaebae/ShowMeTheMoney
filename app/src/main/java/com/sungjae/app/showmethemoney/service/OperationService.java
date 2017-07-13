@@ -45,9 +45,10 @@ public class OperationService extends Service {
     }
 
     Handler mHandler;
+
     @NonNull
     private Handler getHandler() {
-        mHandler =  new Handler(getLooperHandlerThread()) {
+        mHandler = new Handler(getLooperHandlerThread()) {
             @Override
             public void handleMessage(Message msg) {
                 doOperation();
@@ -69,9 +70,10 @@ public class OperationService extends Service {
             Currency c = mApi.getCurrency();
             Balance b = mApi.getBalance(c);
 
-            ArrayList<Result> results = null;
+            int currencyId = insertToCurrencyHistory(c);
+            insertToBalanceHistory(b, currencyId);
 
-            updateView(c, b);
+            ArrayList<Result> results = null;
 
             float unit = b.getBuyDiff();
             if (unit != 0.0f) {
@@ -84,8 +86,10 @@ public class OperationService extends Service {
             }
 
             if (results != null) {
-                insertDB(results);
+                insertTradeDB(results);
             }
+
+            updateView(c, b);
 
         } catch (Exception e) {
             Log.e("OperationSvc", e.getMessage());
@@ -107,9 +111,32 @@ public class OperationService extends Service {
         getApplicationContext().sendBroadcast(intent);
     }
 
-    protected void insertDB(ArrayList<Result> results) {
+
+    private void insertToBalanceHistory(Balance balance, int currencyId) {
         ContentResolver cr = getContentResolver();
-        Uri uri = Uri.parse("content://trade");
+
+        Uri uri = Uri.parse("content://trade/balance");
+
+        ContentValues contentValue = toContentValue(balance, currencyId);
+        cr.insert(uri, contentValue);
+        cr.notifyChange(uri, null);
+    }
+
+
+    private int insertToCurrencyHistory(Currency currency) {
+        ContentResolver cr = getContentResolver();
+
+        Uri uri = Uri.parse("content://trade/currency");
+        ContentValues contentValue = toContentValue(currency);
+        Uri result = cr.insert(uri, contentValue);
+        cr.notifyChange(uri, null);
+        return Integer.parseInt(result.getLastPathSegment());
+    }
+
+
+    protected void insertTradeDB(ArrayList<Result> results) {
+        ContentResolver cr = getContentResolver();
+        Uri uri = Uri.parse("content://trade/trade");
 
         for (Result result : results) {
             ContentValues contentValue = toContentValue(result);
@@ -128,6 +155,24 @@ public class OperationService extends Service {
         contentValue.put("amount", result.mAmount);
         return contentValue;
     }
+
+    private ContentValues toContentValue(Currency currency) {
+        ContentValues contentValue = new ContentValues();
+        contentValue.put("date", System.currentTimeMillis());
+        contentValue.put("coin", COIN);
+        contentValue.put("sell", currency.getSell());
+        contentValue.put("buy", currency.getBuy());
+        return contentValue;
+    }
+
+    private ContentValues toContentValue(Balance balance, int currencyId) {
+        ContentValues contentValue = new ContentValues();
+        contentValue.put("currency", currencyId);
+        contentValue.put("realMoney", balance.getRealMoney());
+        contentValue.put("bitMoney", balance.getBitMoney());
+        return contentValue;
+    }
+
 
     @Nullable
     @Override

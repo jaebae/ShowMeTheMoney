@@ -14,8 +14,7 @@ import android.support.annotation.Nullable;
 
 public class TradeProvider extends ContentProvider {
     private static final String DATABASE_NAME = "trade.db";
-    private static final int DATABASE_VERSION = 209;
-    private static final String TABLE_NAME = "TRADE";
+    private static final int DATABASE_VERSION = 100;
 
     private SQLiteDatabase mDatabase;
 
@@ -29,7 +28,12 @@ public class TradeProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projectionIn, String selection, String[] selectionArgs, String sortOrder) {
-        return mDatabase.query(TABLE_NAME, projectionIn, selection, selectionArgs, null, null, sortOrder);
+        return mDatabase.query(getTableName(uri), projectionIn, selection, selectionArgs, null, null, sortOrder);
+    }
+
+    @NonNull
+    private String getTableName(Uri uri) {
+        return uri.getEncodedPath().substring(1);
     }
 
     @Nullable
@@ -42,7 +46,7 @@ public class TradeProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         Uri ret = null;
-        long rowId = mDatabase.insert(TABLE_NAME, null, contentValues);
+        long rowId = mDatabase.insert(getTableName(uri), null, contentValues);
 
         if (rowId > 0) {
             ret = ContentUris.withAppendedId(uri, rowId);
@@ -72,8 +76,11 @@ public class TradeProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase db) {
             db.execSQL(getDropTradeTableQuery());
             db.execSQL(getDropCurrencyTableQuery());
+            db.execSQL(getDropBalanceTableQuery());
+
             db.execSQL(getCreateTradeTableQuery());
             db.execSQL(getCreateCurrencyTableQuery());
+            db.execSQL(getCreateBalanceTableQuery());
         }
 
         @Override
@@ -87,9 +94,9 @@ public class TradeProvider extends ContentProvider {
                     " date long, " +
                     " coin text, " +
                     " trade text, " +
-                    " unit text, " +
-                    " price text, " +
-                    " amount text )";
+                    " unit float, " +
+                    " price float, " +
+                    " amount float )";
         }
 
         private String getCreateCurrencyTableQuery() {
@@ -97,8 +104,16 @@ public class TradeProvider extends ContentProvider {
                     "( _id integer PRIMARY KEY, " +
                     " date long, " +
                     " coin text, " +
-                    " sell text, " +
-                    " buy text ) ";
+                    " sell float, " +
+                    " buy float ) ";
+        }
+
+        private String getCreateBalanceTableQuery() {
+            return "CREATE TABLE IF NOT EXISTS BALANCE " +
+                    "( _id integer PRIMARY KEY, " +
+                    " currency integer, " +
+                    " realMoney float, " +
+                    " bitMoney float ) ";
         }
 
         private String getDropTradeTableQuery() {
@@ -107,6 +122,10 @@ public class TradeProvider extends ContentProvider {
 
         private String getDropCurrencyTableQuery() {
             return "DROP TABLE IF EXISTS CURRENCY";
+        }
+
+        private String getDropBalanceTableQuery() {
+            return "DROP TABLE IF EXISTS BALANCE";
         }
 
     }

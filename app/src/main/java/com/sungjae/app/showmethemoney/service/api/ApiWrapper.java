@@ -27,8 +27,7 @@ public class ApiWrapper {
 
         return new Currency(mCoinType,
                 getFloatValue(data, "buy_price"),
-                getFloatValue(data, "sell_price"),
-                getFloatValue(data, "closing_price"));
+                getFloatValue(data, "sell_price"));
     }
 
     public Balance getBalance(Currency currency) throws Exception {
@@ -62,9 +61,9 @@ public class ApiWrapper {
 
             Result result = new Result(System.currentTimeMillis(),
                     tradeType,
-                    getString("units", jsonObject),
-                    getString("price", jsonObject),
-                    getString("total", jsonObject)
+                    Float.parseFloat(getString("units", jsonObject)),
+                    Float.parseFloat(getString("price", jsonObject)),
+                    Float.parseFloat(getString("total", jsonObject))
             );
 
             resultList.add(result);

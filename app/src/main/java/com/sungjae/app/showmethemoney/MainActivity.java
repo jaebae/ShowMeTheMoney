@@ -116,17 +116,17 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         float total = bitMoney + mRealMoney;
         float diff = mRealMoney - bitMoney;
         float percent = (diff / mRealMoney) * 100.f;
-        tv.setText("매도가 기준 : " + (int) bitMoney + "(" + (int) total + ") " + (int) percent + "%");
+        tv.setText("매도가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 
         bitMoney = mBitMoney * mBuy;
         total = bitMoney + mRealMoney;
         diff = bitMoney - mRealMoney;
         percent = (diff / mRealMoney) * 100.f;
         tv = (TextView) findViewById(R.id.bit_as_buy);
-        tv.setText("매수가 기준 : " + (int) bitMoney + "(" + (int) total + ") " + (int) percent + "%");
+        tv.setText("매수가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 
         tv = (TextView) findViewById(R.id.krw);
-        tv.setText("현금 : " + mRealMoney);
+        tv.setText("현금 : " + (int)mRealMoney);
 
         mPresenter.reloadList();
     }

@@ -51,7 +51,7 @@ public class TradeModel implements LoaderManager.LoaderCallbacks<Cursor> {
                 "_id"
         };
 
-        return new CursorLoader(mContext, Uri.parse("content://trade"), projection, null,
+        return new CursorLoader(mContext, Uri.parse("content://trade/trade"), projection, null,
                 null, "_id desc");
     }
 

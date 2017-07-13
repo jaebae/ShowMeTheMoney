@@ -9,7 +9,7 @@ public class Currency {
 
     HashMap<String, Float> mMinTrade = new HashMap<>();
 
-    public Currency(String coinType, float buy, float sell, float latest) {
+    public Currency(String coinType, float buy, float sell) {
         mCoinType = coinType;
         mBuy = buy;
         mSell = sell;
