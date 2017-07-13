@@ -20,7 +20,8 @@ public class TradeProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        TradeDbHelper helper = new TradeDbHelper(getContext());
+        Context context = getContext();
+        TradeDbHelper helper = new TradeDbHelper(context, context.getExternalFilesDir("databases") + "/" + DATABASE_NAME);
         mDatabase = helper.getReadableDatabase();
         return true;
     }
@@ -68,8 +69,8 @@ public class TradeProvider extends ContentProvider {
 
     private static class TradeDbHelper extends SQLiteOpenHelper {
 
-        public TradeDbHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        public TradeDbHelper(Context context, String dbPath) {
+            super(context, dbPath, null, DATABASE_VERSION);
         }
 
         @Override
