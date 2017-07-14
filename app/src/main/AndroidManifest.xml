@@ -39,6 +39,7 @@
             android:name="com.sungjae.app.showmethemoney.provider.TradeProvider"
             android:authorities="trade"
             android:exported="false" />
+        <activity android:name="com.sungjae.app.showmethemoney.SettingsActiviy"></activity>
     </application>
 
 </manifest>

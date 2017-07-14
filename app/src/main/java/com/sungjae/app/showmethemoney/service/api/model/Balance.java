@@ -1,11 +1,13 @@
 package com.sungjae.app.showmethemoney.service.api.model;
 
+import com.sungjae.app.showmethemoney.ConfigurationConstants;
+
 public class Balance {
     private float mBitMoney;
     private float mRealMoney;
     private Currency mCurrency;
 
-    private final static float mMinRate = 3.f; // 3%
+    //private final static float mMinRate = 3.f; // 3%
 
     public Balance(float bitMoney, float realMoney, Currency currency) {
         mBitMoney = bitMoney;
@@ -41,7 +43,7 @@ public class Balance {
             float percent = (diff / getRealMoney()) * 100.f;
             System.out.println("krw = " + getRealMoney() + "\nbit = " + bitReal + "\ndiff = " + diff + "\nPercent = " + percent);
 
-            if (percent > mMinRate) {
+            if (percent > ConfigurationConstants.getSellDiffMinRate()) {
                 unit = (diff / 2) / getCurrency().getBuy();
                 int Unit = (int) (unit * getCurrency().getMinTradeRate());
                 unit = (Unit / getCurrency().getMinTradeRate());
@@ -61,7 +63,7 @@ public class Balance {
             float percent = (diff / getRealMoney()) * 100.f;
             System.out.println("krw = " + getRealMoney() + "\nbit = " + bitReal + "\ndiff = " + diff + "\nPercent = " + percent);
 
-            if (percent > mMinRate) {
+            if (percent > ConfigurationConstants.getBuyDiffMinRate()) {
                 unit = (diff / 2) / getCurrency().getSell();
                 int Unit = (int) (unit * getCurrency().getMinTradeRate());
                 unit = (Unit / getCurrency().getMinTradeRate());
