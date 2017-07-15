@@ -1,9 +1,8 @@
-package com.sungjae.app.showmethemoney;
+package com.sungjae.app.showmethemoney.activity.setting;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceGroup;
@@ -13,10 +12,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.sungjae.com.app.showmethemoney.R;
-
-/**
- * Created by bennj on 2017-07-14.
- */
 
 public class SettingsActiviy extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     @Override
@@ -45,22 +40,17 @@ public class SettingsActiviy extends PreferenceActivity implements SharedPrefere
                 finish();
             }
         });
-        v.addHeaderView(btn);
+        v.addFooterView(btn);
 
     }
 
-    private void update(Preference pref)
-    {
-        if(pref instanceof PreferenceGroup)
-        {
-            for (int i=0;i<((PreferenceGroup) pref).getPreferenceCount();i++)
-            {
+    private void update(Preference pref) {
+        if (pref instanceof PreferenceGroup) {
+            for (int i = 0; i < ((PreferenceGroup) pref).getPreferenceCount(); i++) {
                 update(((PreferenceGroup) pref).getPreference(i));
             }
-        }
-        else if(pref instanceof EditTextPreference)
-        {
-            pref.setSummary(((EditTextPreference)pref).getText());
+        } else if (pref instanceof EditTextPreference) {
+            pref.setSummary(((EditTextPreference) pref).getText());
         }
 
     }

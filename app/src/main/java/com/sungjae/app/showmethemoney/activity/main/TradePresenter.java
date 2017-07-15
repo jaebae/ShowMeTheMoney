@@ -1,4 +1,4 @@
-package com.sungjae.app.showmethemoney;
+package com.sungjae.app.showmethemoney.activity.main;
 
 
 public class TradePresenter {

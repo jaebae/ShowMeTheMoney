@@ -1,6 +1,6 @@
 package com.sungjae.app.showmethemoney.service.api.model;
 
-import com.sungjae.app.showmethemoney.ConfigurationConstants;
+import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 
 public class Balance {
     private float mBitMoney;

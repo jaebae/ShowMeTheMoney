@@ -1,6 +1,6 @@
 package com.sungjae.app.showmethemoney.service.api;
 
-import com.sungjae.app.showmethemoney.ConfigurationConstants;
+import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
 import com.sungjae.app.showmethemoney.service.api.model.Result;

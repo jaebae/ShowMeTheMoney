@@ -1,4 +1,4 @@
-package com.sungjae.app.showmethemoney;
+package com.sungjae.app.showmethemoney.activity.main;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
+import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
 import com.sungjae.com.app.showmethemoney.R;
 
 
@@ -32,13 +36,6 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         }
 
         setContentView(R.layout.activity_main);
-        findViewById(R.id.btnSetting).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), SettingsActiviy.class);
-                startActivity(intent);
-            }
-        });
         mListView = (ListView) findViewById(R.id.list);
         mPresenter = new TradePresenter(this, new TradeModel(this, getLoaderManager()));
         onCreateView();
@@ -62,6 +59,23 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         updateView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_setting:
+                Intent intent = new Intent(getApplicationContext(), SettingsActiviy.class);
+                startActivity(intent);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onCreateView() {
@@ -135,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         tv.setText("매수가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 
         tv = (TextView) findViewById(R.id.krw);
-        tv.setText("현금 : " + (int)mRealMoney);
+        tv.setText("현금 : " + (int) mRealMoney);
 
         mPresenter.reloadList();
     }

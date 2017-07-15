@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.sungjae.app.showmethemoney.MainActivity">
+        <activity android:name="com.sungjae.app.showmethemoney.activity.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,7 +39,7 @@
             android:name="com.sungjae.app.showmethemoney.provider.TradeProvider"
             android:authorities="trade"
             android:exported="false" />
-        <activity android:name="com.sungjae.app.showmethemoney.SettingsActiviy"></activity>
+        <activity android:name="com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy"></activity>
     </application>
 
 </manifest>

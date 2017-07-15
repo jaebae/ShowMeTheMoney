@@ -1,4 +1,4 @@
-package com.sungjae.app.showmethemoney;
+package com.sungjae.app.showmethemoney.activity.setting;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
