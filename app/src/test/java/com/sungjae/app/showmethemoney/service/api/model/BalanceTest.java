@@ -15,12 +15,12 @@ public class BalanceTest {
         Currency c = new Currency("ETH", 1.f, 1.f);
         Balance balance = new Balance(106.f, 100.f, c);
         TradeRule tr = TradeRuleFactory.getRule(c,balance);
-        assertThat(tr.getSellDiff(), is(3.f));
+        assertThat(tr.getSellAmount(), is(3.f));
 
         c = new Currency("ETH", 0.1f, 1.f);
         balance = new Balance(1060.f, 100.f, c);
         tr = TradeRuleFactory.getRule(c,balance);
-        assertThat(tr.getSellDiff(), is(30.f));
+        assertThat(tr.getSellAmount(), is(30.f));
     }
 
 
@@ -29,11 +29,11 @@ public class BalanceTest {
         Currency c = new Currency("ETH", 1.f, 1.f);
         Balance balance = new Balance(100.f, 106.f, c);
         TradeRule tr = TradeRuleFactory.getRule(c,balance);
-        assertThat(tr.getBuyDiff(), is(3.f));
+        assertThat(tr.getBuyAmount(), is(3.f));
 
         c = new Currency("ETH", 0.1f, 1.f);
         balance = new Balance(1000.f, 1060.f, c);
         tr = TradeRuleFactory.getRule(c,balance);
-        assertThat(tr.getBuyDiff(), is(30.f));
+        assertThat(tr.getBuyAmount(), is(30.f));
     }
 }

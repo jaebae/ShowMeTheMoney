@@ -32,7 +32,7 @@ public class Currency {
         return mCoinType;
     }
 
-    public float getMinTradeRate() {
+    public float getMinTradeUnit() {
         return mMinTrade.get(mCoinType);
     }
 

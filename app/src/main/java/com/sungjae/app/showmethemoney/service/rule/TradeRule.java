@@ -14,6 +14,6 @@ public abstract class TradeRule {
         mCurrency=currency;
         mBalance=balance;
     }
-    abstract public float getSellDiff();
-    abstract public float getBuyDiff();
+    abstract public float getSellAmount();
+    abstract public float getBuyAmount();
 }

@@ -79,12 +79,12 @@ public class OperationService extends Service {
 
             TradeRule tr = TradeRuleFactory.getRule(c,b);
 
-            float unit = tr.getBuyDiff();
+            float unit = tr.getBuyAmount();
             if (unit != 0.0f) {
                 results = mApi.buy(unit);
             }
 
-            unit = tr.getSellDiff();
+            unit = tr.getSellAmount();
             if (unit != 0.0f) {
                 results = mApi.sell(unit);
             }

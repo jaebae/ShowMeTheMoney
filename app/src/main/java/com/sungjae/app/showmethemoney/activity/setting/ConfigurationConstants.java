@@ -29,11 +29,11 @@ public class ConfigurationConstants {
     {
         mCtx=ctx;
     }
-    public static float getSellDiffMinRate()
+    public static float getSellRate()
     {
         return getDiff("sellValue");
     }
-    public static float getBuyDiffMinRate()
+    public static float getBuyRate()
     {
         return getDiff("buyValue");
     }
