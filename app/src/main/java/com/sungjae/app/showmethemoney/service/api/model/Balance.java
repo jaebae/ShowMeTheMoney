@@ -33,44 +33,6 @@ public class Balance {
         return "mBitMoney = " + getBitMoney() + "\nmRealMoeny = " + getRealMoney();
     }
 
-    public float getSellDiff() {
-        float unit = 0.0f;
 
-        float bitReal = getBitMoney() * getCurrency().getBuy();
-        float diff = bitReal - getRealMoney();
-
-        if (diff > 0) {
-            float percent = (diff / getRealMoney()) * 100.f;
-            System.out.println("krw = " + getRealMoney() + "\nbit = " + bitReal + "\ndiff = " + diff + "\nPercent = " + percent);
-
-            if (percent > ConfigurationConstants.getSellDiffMinRate()) {
-                unit = (diff / 2) / getCurrency().getBuy();
-                int Unit = (int) (unit * getCurrency().getMinTradeRate());
-                unit = (Unit / getCurrency().getMinTradeRate());
-            }
-        }
-
-        return unit;
-    }
-
-    public float getBuyDiff() {
-        float unit = 0.0f;
-
-        float bitReal = getBitMoney() * getCurrency().getSell();
-        float diff = getRealMoney() - bitReal;
-
-        if (diff > 0) {
-            float percent = (diff / getRealMoney()) * 100.f;
-            System.out.println("krw = " + getRealMoney() + "\nbit = " + bitReal + "\ndiff = " + diff + "\nPercent = " + percent);
-
-            if (percent > ConfigurationConstants.getBuyDiffMinRate()) {
-                unit = (diff / 2) / getCurrency().getSell();
-                int Unit = (int) (unit * getCurrency().getMinTradeRate());
-                unit = (Unit / getCurrency().getMinTradeRate());
-            }
-        }
-
-        return unit;
-    }
 
 }

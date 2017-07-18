@@ -19,6 +19,8 @@ import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
 import com.sungjae.app.showmethemoney.service.api.model.Result;
+import com.sungjae.app.showmethemoney.service.rule.TradeRule;
+import com.sungjae.app.showmethemoney.service.rule.TradeRuleFactory;
 
 import java.util.ArrayList;
 
@@ -75,12 +77,14 @@ public class OperationService extends Service {
 
             ArrayList<Result> results = null;
 
-            float unit = b.getBuyDiff();
+            TradeRule tr = TradeRuleFactory.getRule(c,b);
+
+            float unit = tr.getBuyDiff();
             if (unit != 0.0f) {
                 results = mApi.buy(unit);
             }
 
-            unit = b.getSellDiff();
+            unit = tr.getSellDiff();
             if (unit != 0.0f) {
                 results = mApi.sell(unit);
             }
