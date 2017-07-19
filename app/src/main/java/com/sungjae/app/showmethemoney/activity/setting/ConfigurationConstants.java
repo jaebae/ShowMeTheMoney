@@ -22,7 +22,7 @@ public class ConfigurationConstants {
 
     public static final String CONNECT_KEY = prop.getProperty("CON_KEY");
     public static final String SECRET_KEY = prop.getProperty("SECRET_KEY");
-    private static final String MIN_DIFF_VALUE = "3.0";
+    private static final float MIN_DIFF_VALUE = 3.0f;
 
     private static Context mCtx;
     public static void init(Context ctx)
@@ -31,17 +31,33 @@ public class ConfigurationConstants {
     }
     public static float getSellRate()
     {
-        return getDiff("sellValue");
+        return getPreferenceFloat("sellValue",MIN_DIFF_VALUE);
     }
     public static float getBuyRate()
     {
-        return getDiff("buyValue");
+        return getPreferenceFloat("buyValue",MIN_DIFF_VALUE);
     }
-    private static float getDiff(String key)
+
+    public static boolean getEnabledMoneyKeeper(){ return getPreferenceBoolean("enableMoneyKeeper",false); }
+    public static Float getKeepValueMoneyKeeper(){ return getPreferenceFloat("KeepValue",0f); }
+
+
+    public static boolean getEnabledBalancedRule(){ return getPreferenceBoolean("enableBalanced",false); }
+
+    private static float getPreferenceFloat(String key, Float defaultValue)
     {
-        String value = MIN_DIFF_VALUE;
-        if(mCtx!=null) value = PreferenceManager.getDefaultSharedPreferences(mCtx).getString(key,MIN_DIFF_VALUE);
+        String value = defaultValue.toString();
+        if(mCtx!=null) value = PreferenceManager.getDefaultSharedPreferences(mCtx).getString(key,defaultValue.toString());
         System.out.println(key+" : "+value);
         return Float.parseFloat(value);
     }
+    private static boolean getPreferenceBoolean(String key, Boolean defaultValue)
+    {
+        Boolean value = defaultValue;
+
+        if(mCtx!=null) value = PreferenceManager.getDefaultSharedPreferences(mCtx).getBoolean(key,defaultValue);
+        System.out.println(key+" : "+value);
+        return value;
+    }
+
 }

@@ -97,7 +97,7 @@ public class OperationServiceTest {
 
             when(mCurrency.getBuy()).thenReturn(currency);
             when(mCurrency.getSell()).thenReturn(currency);
-            when(mBalance.getBitMoney()).thenReturn(mBitMoney);
+            when(mBalance.getBitAmount()).thenReturn(mBitMoney);
             when(mBalance.getRealMoney()).thenReturn(mRealMoney);
 
             mOperationService.doOperation();

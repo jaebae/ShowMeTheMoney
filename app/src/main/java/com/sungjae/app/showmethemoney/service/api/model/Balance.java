@@ -1,7 +1,5 @@
 package com.sungjae.app.showmethemoney.service.api.model;
 
-import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
-
 public class Balance {
     private float mBitMoney;
     private float mRealMoney;
@@ -15,7 +13,7 @@ public class Balance {
         mCurrency = currency;
     }
 
-    public float getBitMoney() {
+    public float getBitAmount() {
         return mBitMoney;
     }
 
@@ -30,7 +28,7 @@ public class Balance {
 
     @Override
     public String toString() {
-        return "mBitMoney = " + getBitMoney() + "\nmRealMoeny = " + getRealMoney();
+        return "mBitMoney = " + getBitAmount() + "\nmRealMoeny = " + getRealMoney();
     }
 
 

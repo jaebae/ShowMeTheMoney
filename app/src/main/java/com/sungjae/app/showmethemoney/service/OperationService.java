@@ -15,12 +15,17 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sungjae.app.showmethemoney.data.DataMap;
+import com.sungjae.app.showmethemoney.data.DataMapKey;
+import com.sungjae.app.showmethemoney.data.IDataUpdater;
 import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
 import com.sungjae.app.showmethemoney.service.api.model.Result;
-import com.sungjae.app.showmethemoney.service.rule.TradeRule;
-import com.sungjae.app.showmethemoney.service.rule.TradeRuleFactory;
+import com.sungjae.app.showmethemoney.trade.preProcessor.MoneyKeeper;
+import com.sungjae.app.showmethemoney.trade.preProcessor.ServerReader;
+import com.sungjae.app.showmethemoney.trade.rule.ITradeRule;
+import com.sungjae.app.showmethemoney.trade.rule.TradeRuleFactory;
 
 import java.util.ArrayList;
 
@@ -67,24 +72,46 @@ public class OperationService extends Service {
     }
 
 
-    protected void doOperation() {
+    protected void doOperation()
+    {
+        IDataUpdater updaters[] = new IDataUpdater[] {new ServerReader(mApi),new MoneyKeeper() };
+
+        //get data from server
+        //calculate data to more data
+        for (IDataUpdater updater:updaters) {
+            updater.getValue();
+            updater.update();
+        }
+        // TODO: ADD balance currency to DB
+        int currencyId = insertToCurrencyHistory();
+        insertToBalanceHistory(currencyId);
+
+        //do rules...
+        ITradeRule trList[] = TradeRuleFactory.getRules();
+        for(ITradeRule tr : trList)
+        {
+            tr.execute();
+        }
+
+        //do sell/buy
+        executeTrade();
+
+        //update GUI
+        updateView();
+
+    }
+
+    private void executeTrade()
+    {
         try {
-            Currency c = mApi.getCurrency();
-            Balance b = mApi.getBalance(c);
-
-            int currencyId = insertToCurrencyHistory(c);
-            insertToBalanceHistory(b, currencyId);
-
             ArrayList<Result> results = null;
-
-            TradeRule tr = TradeRuleFactory.getRule(c,b);
-
-            float unit = tr.getBuyAmount();
+            float unit = DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT);
             if (unit != 0.0f) {
-                results = mApi.buy(unit);
+                    results = mApi.buy(unit);
+
             }
 
-            unit = tr.getSellAmount();
+            unit = DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT);
             if (unit != 0.0f) {
                 results = mApi.sell(unit);
             }
@@ -93,45 +120,98 @@ public class OperationService extends Service {
                 insertTradeDB(results);
             }
 
-            updateView(c, b);
-
         } catch (Exception e) {
-            Log.e("OperationSvc", e.getMessage());
-            ShowErrorToast(e);
+            e.printStackTrace();
         }
     }
+
+//    protected void doOperation() {
+//        try {
+//            Currency c = mApi.getCurrency();
+//            Balance b = mApi.getBalance(c);
+//
+//            int currencyId = insertToCurrencyHistory(c);
+//            insertToBalanceHistory(b, currencyId);
+//
+//            ArrayList<Result> results = null;
+//
+//            ITradeRule tr = TradeRuleFactory.getRules();
+//
+//            float unit = tr.getBuyAmount();
+//            if (unit != 0.0f) {
+//                results = mApi.buy(unit);
+//            }
+//
+//            unit = tr.getSellAmount();
+//            if (unit != 0.0f) {
+//                results = mApi.sell(unit);
+//            }
+//
+//            if (results != null) {
+//                insertTradeDB(results);
+//            }
+//
+//            updateView(c, b);
+//
+//        } catch (Exception e) {
+//            Log.e("OperationSvc", e.getMessage());
+//            ShowErrorToast(e);
+//        }
+//    }
 
     protected void ShowErrorToast(Exception e) {
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    private void updateView(Currency c, Balance b) {
+    private void updateView() {
         Intent intent = new Intent("UPDATE_VIEW");
-        intent.putExtra("buy", c.getBuy());
-        intent.putExtra("sell", c.getSell());
-        intent.putExtra("bitMoney", b.getBitMoney());
-        intent.putExtra("realMoney", b.getRealMoney());
+        intent.putExtra("buy", DataMap.readFloat(DataMapKey.BUY_VALUE));
+        intent.putExtra("sell", DataMap.readFloat(DataMapKey.SELL_VALUE));
+        intent.putExtra("bitMoney", DataMap.readFloat(DataMapKey.COIN_AMOUNT));
+        intent.putExtra("realMoney", DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW));
+        intent.putExtra("realMoneyAvailable", DataMap.readFloat(DataMapKey.MONEY_VALUE_AVAIL));
 
         getApplicationContext().sendBroadcast(intent);
     }
 
 
-    private void insertToBalanceHistory(Balance balance, int currencyId) {
+
+
+    private ContentValues toContentValueCurrency() {
+        ContentValues contentValue = new ContentValues();
+        contentValue.put("date", System.currentTimeMillis());
+        contentValue.put("coin", COIN);
+        contentValue.put("sell", DataMap.readFloat(DataMapKey.SELL_VALUE));
+        contentValue.put("buy", DataMap.readFloat(DataMapKey.BUY_VALUE));
+        return contentValue;
+    }
+
+
+
+    private ContentValues toContentValue( int currencyId) {
+        ContentValues contentValue = new ContentValues();
+        contentValue.put("currency", currencyId);
+        contentValue.put("realMoney", DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW));
+        contentValue.put("bitMoney", DataMap.readFloat(DataMapKey.COIN_AMOUNT));
+        return contentValue;
+    }
+
+    private void insertToBalanceHistory(int currencyId) {
         ContentResolver cr = getContentResolver();
 
         Uri uri = Uri.parse("content://trade/balance");
 
-        ContentValues contentValue = toContentValue(balance, currencyId);
+        ContentValues contentValue = toContentValue(currencyId);
         cr.insert(uri, contentValue);
         cr.notifyChange(uri, null);
     }
 
 
-    private int insertToCurrencyHistory(Currency currency) {
+    private int insertToCurrencyHistory() {
         ContentResolver cr = getContentResolver();
 
         Uri uri = Uri.parse("content://trade/currency");
-        ContentValues contentValue = toContentValue(currency);
+        ContentValues contentValue = toContentValueCurrency();
         Uri result = cr.insert(uri, contentValue);
         cr.notifyChange(uri, null);
         return Integer.parseInt(result.getLastPathSegment());
@@ -160,22 +240,6 @@ public class OperationService extends Service {
         return contentValue;
     }
 
-    private ContentValues toContentValue(Currency currency) {
-        ContentValues contentValue = new ContentValues();
-        contentValue.put("date", System.currentTimeMillis());
-        contentValue.put("coin", COIN);
-        contentValue.put("sell", currency.getSell());
-        contentValue.put("buy", currency.getBuy());
-        return contentValue;
-    }
-
-    private ContentValues toContentValue(Balance balance, int currencyId) {
-        ContentValues contentValue = new ContentValues();
-        contentValue.put("currency", currencyId);
-        contentValue.put("realMoney", balance.getRealMoney());
-        contentValue.put("bitMoney", balance.getBitMoney());
-        return contentValue;
-    }
 
 
     @Nullable

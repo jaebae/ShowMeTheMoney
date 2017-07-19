@@ -51,7 +51,9 @@ public class TradeListAdapter extends ResourceCursorAdapter {
         return dateFormat.format(date) + " \u200e" + timeFormat.format(date);
     }
 
-    public String trimNumber(String str) {
+    public String
+
+    trimNumber(String str) {
         int pointer = str.lastIndexOf('.');
         if (pointer > 0 && pointer + 3 < str.length()) {
             str = str.substring(0, pointer + 3);
