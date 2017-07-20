@@ -1,10 +1,16 @@
 package com.sungjae.app.showmethemoney.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -12,6 +18,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,6 +33,7 @@ import com.sungjae.app.showmethemoney.trade.preProcessor.MoneyKeeper;
 import com.sungjae.app.showmethemoney.trade.preProcessor.ServerReader;
 import com.sungjae.app.showmethemoney.trade.rule.ITradeRule;
 import com.sungjae.app.showmethemoney.trade.rule.TradeRuleFactory;
+import com.sungjae.com.app.showmethemoney.R;
 
 import java.util.ArrayList;
 
@@ -91,15 +99,19 @@ public class OperationService extends Service {
         ITradeRule trList[] = TradeRuleFactory.getRules();
         for(ITradeRule tr : trList)
         {
-            if(tr.isEnabled())
+            if(tr.isEnabled()) {
+                tr.header();
                 tr.execute();
+                executeTrade();//do sell/buy
+                tr.footer();
+
+            }
         }
 
-        //do sell/buy
-        executeTrade();
 
         //update GUI
         updateView();
+        showNotification();
 
     }
 
@@ -108,12 +120,14 @@ public class OperationService extends Service {
         try {
             ArrayList<Result> results = null;
             float unit = DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT);
+            DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT,0f);
             if (unit != 0.0f) {
                     results = mApi.buy(unit);
 
             }
 
             unit = DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT);
+            DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT,0f);
             if (unit != 0.0f) {
                 results = mApi.sell(unit);
             }
@@ -256,4 +270,38 @@ public class OperationService extends Service {
         mHandler.sendEmptyMessage(0);
         return super.onStartCommand(intent, flags, startId);
     }
+
+    public void showNotification() {
+        try {
+            if(DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty()==false) {
+                NotificationCompat.Builder mBuilder = createNotification();
+
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.notify(1, mBuilder.build());
+            }
+        } catch (Exception e)
+        {
+
+        }
+
+    }
+    private NotificationCompat.Builder createNotification(){
+//        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.coin);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.coin)
+            //    .setLargeIcon(icon)
+//                .setContentTitle("SHOW ME THE MONEY")
+                .setContentTitle(DataMap.readString(DataMapKey.NOTIFICATION_CONTENT))
+                .setAutoCancel(true)
+                .setWhen(System.currentTimeMillis())
+                .setDefaults(Notification.DEFAULT_ALL);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            builder.setCategory(Notification.CATEGORY_MESSAGE)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+        return builder;
+    }
+
+
 }

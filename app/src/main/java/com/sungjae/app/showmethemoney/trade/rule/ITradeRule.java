@@ -31,14 +31,26 @@ abstract public class ITradeRule {
 
         getValue();
 
-        float buyAmount = getBuyAmount();
-        float sellAmount = getSellAmount();
+        float buyAmount=0f;
+        float sellAmount=0f;
+
+        buyAmount = getBuyAmount();
+        if(buyAmount==0f)
+            sellAmount = getSellAmount();
 
         DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT, buyAmount);
         DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT, sellAmount);
 
     }
+    float checkAmount(float amount)
+    {
+        int Amount = (int) (amount * tradeUnit);
+        amount = (Amount / tradeUnit);
+        return amount;
+    }
     abstract public boolean isEnabled();
     abstract float getSellAmount();
     abstract float getBuyAmount();
+    abstract public void footer();
+    abstract public void header();
 }

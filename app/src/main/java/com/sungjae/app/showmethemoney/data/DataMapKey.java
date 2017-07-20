@@ -24,6 +24,8 @@ public class DataMapKey {
 //------------
 
     public static final String ERROR_TOAST_CONTENT = "errToastContent";
+    public static final String NOTIFICATION_TITLE = "NOTIFICATION_TITLE";
+    public static final String NOTIFICATION_CONTENT = "NOTIFICATION_CONTENT";
 
     public static final String __LAST__ = "__LAST__";
 }

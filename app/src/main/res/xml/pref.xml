@@ -61,13 +61,13 @@
         <EditTextPreference
             android:title="High cut"
             android:editable="true"
-            android:defaultValue="110000"
+            android:defaultValue="999999999"
             android:inputType="numberDecimal"
             android:key="HighCut"></EditTextPreference>
         <EditTextPreference
             android:title="Low cut"
             android:editable="true"
-            android:defaultValue="110000"
+            android:defaultValue="0"
             android:inputType="numberDecimal"
             android:key="LowCut"
             ></EditTextPreference>

@@ -32,6 +32,16 @@ class BalancingRule extends ITradeRule {
         return out;
     }
 
+    @Override
+    public void footer() {
+
+    }
+
+    @Override
+    public void header() {
+
+    }
+
     private float calcAmount(float coinUnitValue, float diffRate)
     {
         float amount = 0.0f;
