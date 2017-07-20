@@ -1,5 +1,7 @@
 package com.sungjae.app.showmethemoney.trade.rule;
 
+import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
+import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
@@ -19,13 +21,24 @@ public class BalanceTest {
     public void sellDiffTest() throws Exception {
         Currency c = new Currency("ETH", 1.f, 1.f);
         Balance b = new Balance(106.f, 100.f, c);
+        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, 0.5f);
         testBR(c,b);
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT), is(0.0f));
         assertThat(DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT), is(3.f));
 
         c = new Currency("ETH", 0.1f, 1.f);
         b = new Balance(1060.f, 100.f, c);
+        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, 0.5f);
         testBR(c,b);
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT), is(0.0f));
         assertThat(DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT), is(30.f));
+
+        c = new Currency("ETH", 1f, 1.f);
+        b = new Balance(1000.f, 1000.f, c);
+        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, 0.4f);
+        testBR(c,b);
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT), is(0.0f));
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT), is(200.f));
     }
 
     private void testBR(Currency c, Balance b)
@@ -51,12 +64,25 @@ public class BalanceTest {
     public void buyDiffTest() throws Exception {
         Currency c = new Currency("ETH", 1.f, 1.f);
         Balance b = new Balance(100.f, 106.f, c);
+        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, 0.5f);
         testBR(c,b);
         assertThat(DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT), is(3.f));
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT), is(0.f));
 
         c = new Currency("ETH", 0.1f, 1.f);
         b = new Balance(1000.f, 1060.f, c);
+        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, 0.5f);
         testBR(c,b);
         assertThat(DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT), is(30.f));
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT), is(0.f));
+
+        c = new Currency("ETH", 1f, 1f);
+        b = new Balance(1000.f, 1000.f, c);
+        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, 0.7f);
+        testBR(c,b);
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT), is(400.f));
+        assertThat(DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT), is(0.f));
+
+
     }
 }

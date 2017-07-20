@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-
+    <EditTextPreference
+        android:title="총입금액"
+        android:editable="true"
+        android:defaultValue="100000"
+        android:inputType="numberDecimal"
+        android:key="totalInput"
+        ></EditTextPreference>
     <PreferenceCategory android:title="Balanced trade">
 
         <SwitchPreference
@@ -22,8 +28,32 @@
             android:inputType="numberDecimal"
             android:key="buyValue"
             ></EditTextPreference>
+        <EditTextPreference
+            android:title="Coin 투자 비중"
+            android:editable="true"
+            android:defaultValue="0.5"
+            android:inputType="numberDecimal"
+            android:key="investRate"
+            ></EditTextPreference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Cutoff trade">
+
+    <PreferenceCategory android:title="Money Keeper">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="enableMoneyKeeper"
+            android:title="enable" />
+        <EditTextPreference
+            android:title="request to keep"
+            android:editable="true"
+            android:defaultValue="0"
+            android:inputType="numberDecimal"
+            android:key="KeepValue"
+            ></EditTextPreference>
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="Cutoff trade(계획)"
+        >
         <SwitchPreference
             android:defaultValue="false"
             android:key="enableCutoff"
@@ -43,17 +73,4 @@
             ></EditTextPreference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Money Keeper">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="enableMoneyKeeper"
-            android:title="enable" />
-        <EditTextPreference
-            android:title="request to keep"
-            android:editable="true"
-            android:defaultValue="0"
-            android:inputType="numberDecimal"
-            android:key="KeepValue"
-            ></EditTextPreference>
-    </PreferenceCategory>
 </PreferenceScreen>

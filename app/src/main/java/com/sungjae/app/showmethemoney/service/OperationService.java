@@ -59,6 +59,7 @@ public class OperationService extends Service {
             @Override
             public void handleMessage(Message msg) {
                 doOperation();
+
             }
         };
         return mHandler;
@@ -90,7 +91,8 @@ public class OperationService extends Service {
         ITradeRule trList[] = TradeRuleFactory.getRules();
         for(ITradeRule tr : trList)
         {
-            tr.execute();
+            if(tr.isEnabled())
+                tr.execute();
         }
 
         //do sell/buy

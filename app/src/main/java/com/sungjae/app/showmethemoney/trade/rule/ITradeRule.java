@@ -28,10 +28,6 @@ abstract public class ITradeRule {
     }
 
     public void execute() {
-        if(isEnabled()==false) {
-            System.out.println("disabled");
-            return;
-        }
 
         getValue();
 
@@ -42,7 +38,7 @@ abstract public class ITradeRule {
         DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT, sellAmount);
 
     }
-    abstract boolean isEnabled();
+    abstract public boolean isEnabled();
     abstract float getSellAmount();
     abstract float getBuyAmount();
 }

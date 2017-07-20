@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
+import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.com.app.showmethemoney.R;
+
+import static com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants.syncSettingsToDataMap;
 
 
 public class MainActivity extends AppCompatActivity implements TradeViewInterface {
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
     @Override
     protected void onResume() {
         super.onResume();
+        syncSettingsToDataMap();
         updateView();
     }
 
@@ -141,14 +145,24 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         tv = (TextView) findViewById(R.id.bit_as_sell);
         float bitMoney = mBitMoney * mSell;
         float total = bitMoney + mAvailMoney;
-        float diff = mAvailMoney - bitMoney;
-        float percent = (diff / mAvailMoney) * 100.f;
+
+        float investRate = DataMap.readFloat(SettingsActiviy.SETTING_HEADER+ConfigurationConstants.INVEST_RATE);
+        float expectedCoinValue = total * investRate;
+        float diff = expectedCoinValue - bitMoney;
+        float percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
+
         tv.setText("매도가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 
         bitMoney = mBitMoney * mBuy;
         total = bitMoney + mAvailMoney;
-        diff = bitMoney - mAvailMoney;
-        percent = (diff / mAvailMoney) * 100.f;
+        diff = expectedCoinValue - bitMoney;
+        percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
+        float totalInput = ConfigurationConstants.getTotalInput();
+        float earnRate = (bitMoney+mRealMoney) / totalInput*100 -100;
+
+        ((TextView) findViewById(R.id.totalInput)).setText("총 입금액 : " + (int) totalInput);
+        ((TextView) findViewById(R.id.earnRate)).setText("이익률 : " + (int) earnRate);
+
         tv = (TextView) findViewById(R.id.bit_as_buy);
         tv.setText("매수가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 

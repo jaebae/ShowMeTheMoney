@@ -13,7 +13,12 @@ import android.widget.ListView;
 
 import com.sungjae.com.app.showmethemoney.R;
 
+import static com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants.syncSettingsToDataMap;
+
 public class SettingsActiviy extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    public static final String SETTING_HEADER = "SETTING_";
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -59,5 +64,7 @@ public class SettingsActiviy extends PreferenceActivity implements SharedPrefere
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         Preference pref = findPreference(s);
         update(pref);
+        syncSettingsToDataMap();
     }
+
 }
