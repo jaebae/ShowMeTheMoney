@@ -23,13 +23,15 @@ public class MoneyKeeper implements IDataUpdater {
         totalValue = DataMap.readFloat(DataMapKey.TOTAL_VALUE_RAW);
 
         enabled = ConfigurationConstants.getEnabledMoneyKeeper();
-        requestToKeep = ConfigurationConstants.getKeepValueMoneyKeeper();
+
+        if(enabled)
+            requestToKeep = ConfigurationConstants.getKeepValueMoneyKeeper();
+        else
+            requestToKeep = 0;
     }
 
     @Override
     public void update() {
-        if(enabled==false)
-            return;
 
         if(requestToKeep > rawMoney )
         {

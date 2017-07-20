@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             mSell = savedInstanceState.getFloat("sell");
             mBitMoney = savedInstanceState.getFloat("bit_money");
             mRealMoney = savedInstanceState.getFloat("real_money");
+            mAvailMoney = savedInstanceState.getFloat("avail_money");
         }
 
         setContentView(R.layout.activity_main);
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
     float mSell;
     float mBitMoney;
     float mRealMoney;
+    float mAvailMoney;
 
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             mSell = (int) intent.getFloatExtra("sell", 0.f);
             mBitMoney = intent.getFloatExtra("bitMoney", 0.f);
             mRealMoney = (int) intent.getFloatExtra("realMoney", 0.f);
+            mAvailMoney = (int) intent.getFloatExtra("realMoneyAvailable", 0.f);
 
             updateView();
         }
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         outState.putFloat("sell", mSell);
         outState.putFloat("bit_money", mBitMoney);
         outState.putFloat("real_money", mRealMoney);
+        outState.putFloat("avail_money", mAvailMoney);
     }
 
     @Override
@@ -136,21 +140,24 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
 
         tv = (TextView) findViewById(R.id.bit_as_sell);
         float bitMoney = mBitMoney * mSell;
-        float total = bitMoney + mRealMoney;
-        float diff = mRealMoney - bitMoney;
-        float percent = (diff / mRealMoney) * 100.f;
+        float total = bitMoney + mAvailMoney;
+        float diff = mAvailMoney - bitMoney;
+        float percent = (diff / mAvailMoney) * 100.f;
         tv.setText("매도가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 
         bitMoney = mBitMoney * mBuy;
-        total = bitMoney + mRealMoney;
-        diff = bitMoney - mRealMoney;
-        percent = (diff / mRealMoney) * 100.f;
+        total = bitMoney + mAvailMoney;
+        diff = bitMoney - mAvailMoney;
+        percent = (diff / mAvailMoney) * 100.f;
         tv = (TextView) findViewById(R.id.bit_as_buy);
         tv.setText("매수가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
 
-        tv = (TextView) findViewById(R.id.krw);
-        tv.setText("현금 : " + (int) mRealMoney);
+//        tv = (TextView) findViewById(R.id.krw);
+//        tv.setText("가용 현금 : " + (int) mAvailMoney+" / 총 현금 : " +(int) mRealMoney+" / 보관금 : " +(int) (mRealMoney-mAvailMoney));
 
+        ((TextView) findViewById(R.id.krw)).setText("가용 현금 : " + (int) mAvailMoney);
+        ((TextView) findViewById(R.id.krw3)).setText("보관금 : " + (int) (mRealMoney-mAvailMoney));
+        ((TextView) findViewById(R.id.krw2)).setText("총 현금 : " + (int) mRealMoney);
         mPresenter.reloadList();
     }
 }

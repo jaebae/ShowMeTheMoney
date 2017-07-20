@@ -20,6 +20,26 @@
             android:text="현금" />
 
         <TextView
+            android:id="@+id/krw2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="현금" />
+        <TextView
+            android:id="@+id/krw3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="현금" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <TextView
             android:id="@+id/sell"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,9 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="매도가" />
-
-    </LinearLayout>
-
+        </LinearLayout>
 
     <TextView
         android:id="@+id/bit_as_sell"
