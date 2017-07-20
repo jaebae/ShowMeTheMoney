@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -152,7 +153,14 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         float percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
 
         tv.setText("매도가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
-
+        if(percent<0)
+        {
+            tv.setTextColor(Color.RED);
+        }
+        else
+        {
+            tv.setTextColor(Color.BLUE);
+        }
         bitMoney = mBitMoney * mBuy;
         total = bitMoney + mAvailMoney;
         diff = expectedCoinValue - bitMoney;
@@ -161,11 +169,18 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         float earnRate = (bitMoney+mRealMoney) / totalInput*100 -100;
 
         ((TextView) findViewById(R.id.totalInput)).setText("총 입금액 : " + (int) totalInput);
-        ((TextView) findViewById(R.id.earnRate)).setText("이익률 : " + (int) earnRate);
+        ((TextView) findViewById(R.id.earnRate)).setText("이익률 : " +  String.format("%.1f", earnRate) + "%");
 
         tv = (TextView) findViewById(R.id.bit_as_buy);
         tv.setText("매수가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
-
+        if(percent<0)
+        {
+            tv.setTextColor(Color.RED);
+        }
+        else
+        {
+            tv.setTextColor(Color.BLUE);
+        }
 //        tv = (TextView) findViewById(R.id.krw);
 //        tv.setText("가용 현금 : " + (int) mAvailMoney+" / 총 현금 : " +(int) mRealMoney+" / 보관금 : " +(int) (mRealMoney-mAvailMoney));
 
