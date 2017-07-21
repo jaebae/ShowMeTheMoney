@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -35,7 +36,10 @@ import com.sungjae.app.showmethemoney.trade.rule.ITradeRule;
 import com.sungjae.app.showmethemoney.trade.rule.TradeRuleFactory;
 import com.sungjae.com.app.showmethemoney.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 
 public class OperationService extends Service {
@@ -271,13 +275,34 @@ public class OperationService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private String createUpDownStatus()
+    {
+        StringBuilder out = new StringBuilder();
+        float rate24,rate12,rate1;
+        float old = readCurrencyHistory(24);
+        rate24 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)-old )/old*100;
+        old = readCurrencyHistory(12);
+        rate12 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)-old )/old*100;
+        old = readCurrencyHistory(1);
+        rate1 = ( DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)-old )/old*100;
+
+        out.append("["+COIN+"="+ String.format("%.0f",DataMap.readFloat(DataMapKey.AVG_COIN_VALUE))+"] ");
+        out.append("24H : "+String.format("%.1f",rate24)+"% ");
+        out.append("12H : "+String.format("%.1f",rate12)+"% ");
+        out.append("1H : "+String.format("%.1f",rate1)+"% ");
+        return out.toString();
+    }
+
     public void showNotification() {
         try {
-            if(DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty()==false) {
-                NotificationCompat.Builder mBuilder = createNotification();
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationCompat.Builder mBuilder;
 
-                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                mNotificationManager.notify(1, mBuilder.build());
+            mBuilder = createNotification("등락",createUpDownStatus(),0);
+            startForeground(1, mBuilder.build());
+            if(DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty()==false) {
+                mBuilder = createNotification("CUT OFF",DataMap.readString(DataMapKey.NOTIFICATION_CONTENT),Notification.DEFAULT_ALL);
+                mNotificationManager.notify(2, mBuilder.build());
             }
         } catch (Exception e)
         {
@@ -285,16 +310,16 @@ public class OperationService extends Service {
         }
 
     }
-    private NotificationCompat.Builder createNotification(){
+    private NotificationCompat.Builder createNotification(String title, String content,int alert ){
 //        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.coin);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.coin)
             //    .setLargeIcon(icon)
-//                .setContentTitle("SHOW ME THE MONEY")
-                .setContentTitle(DataMap.readString(DataMapKey.NOTIFICATION_CONTENT))
+                .setContentTitle(title)
+                .setContentTitle(content)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
-                .setDefaults(Notification.DEFAULT_ALL);
+                .setDefaults(alert);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             builder.setCategory(Notification.CATEGORY_MESSAGE)
                     .setPriority(Notification.PRIORITY_HIGH)
@@ -303,5 +328,29 @@ public class OperationService extends Service {
         return builder;
     }
 
+private float readCurrencyHistory(int hourBefore)
+{
+    float currency = 0f;
+
+    ContentResolver cr = getContentResolver();
+
+    Uri uri = Uri.parse("content://trade/currency");
+    long current = System.currentTimeMillis();
+    long before = current - hourBefore*60*60*1000;
+    Cursor cursor = cr.query(uri, null, "date < ?", new String[] {Float.toString(before)},"date desc limit 0,1");
+    cursor.moveToFirst();
+    before = cursor.getLong(cursor.getColumnIndex("date"));
+    currency =    ( cursor.getFloat(cursor.getColumnIndex("sell"))+cursor.getFloat(cursor.getColumnIndex("buy")))/2;
+
+    Log.d("SMTM","hour before="+hourBefore+"  before="+getLongToTime(this,before) +" / "+before+" currency="+currency );
+    return currency;
+}
+    @NonNull
+    private String getLongToTime(Context context, long date) {
+        SimpleDateFormat dateFormat = (SimpleDateFormat) java.text.DateFormat
+                .getDateInstance(java.text.DateFormat.SHORT, Locale.getDefault());
+        SimpleDateFormat timeFormat = (SimpleDateFormat) android.text.format.DateFormat.getTimeFormat(context);
+        return dateFormat.format(date) + " \u200e" + timeFormat.format(date);
+    }
 
 }

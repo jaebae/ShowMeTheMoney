@@ -1,0 +1,1 @@
+select datetime(date/1000,'unixepoch','localtime'),* from CURRENCY where date=1500572850620 order by date desc 

@@ -8,6 +8,7 @@ public class DataMapKey {
 
     public static final String BUY_VALUE = "buyValue";
     public static final String SELL_VALUE = "sellValue";
+    public static final String AVG_COIN_VALUE = "avgCoinValue";
     public static final String MIN_TRADE_UNIT = "minTradeUnit";
     public static final String COIN_AMOUNT = "coinAmount";
     public static final String MONEY_VALUE_RAW = "moneyValueRaw";

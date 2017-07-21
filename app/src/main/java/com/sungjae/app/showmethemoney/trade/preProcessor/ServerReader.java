@@ -40,6 +40,8 @@ public class ServerReader implements IDataUpdater {
             Float totalValue = b.getBitAmount() +  b.getRealMoney();
             DataMap.writeFloat(DataMapKey.TOTAL_VALUE_RAW, totalValue);
 
+            float avg = (DataMap.readFloat(DataMapKey.BUY_VALUE)+DataMap.readFloat(DataMapKey.SELL_VALUE))/2;
+            DataMap.writeFloat(DataMapKey.AVG_COIN_VALUE, avg);
 
         } catch (Exception e) {
             Log.e("ServerReader", e.getMessage());
