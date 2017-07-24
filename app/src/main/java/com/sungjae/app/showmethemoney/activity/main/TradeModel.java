@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.sungjae.com.app.showmethemoney.R;
 
@@ -66,7 +65,6 @@ public class TradeModel implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         myAdapter.changeCursor(null);
-        Log.d("asd", "asd");
     }
 
     public void registerDataListener(ModelDataListener listener) {

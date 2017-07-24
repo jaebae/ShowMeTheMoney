@@ -9,12 +9,9 @@ import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
 
-/**
- * Created by bennj on 2017-07-19.
- */
 
 public class ServerReader implements IDataUpdater {
-    ApiWrapper mApi;
+    private ApiWrapper mApi;
 
     public ServerReader(ApiWrapper api) {
         mApi = api;
@@ -37,10 +34,10 @@ public class ServerReader implements IDataUpdater {
             DataMap.writeFloat(DataMapKey.MONEY_VALUE_RAW, b.getRealMoney());
 
 
-            Float totalValue = b.getBitAmount() +  b.getRealMoney();
+            Float totalValue = b.getBitAmount() + b.getRealMoney();
             DataMap.writeFloat(DataMapKey.TOTAL_VALUE_RAW, totalValue);
 
-            float avg = (DataMap.readFloat(DataMapKey.BUY_VALUE)+DataMap.readFloat(DataMapKey.SELL_VALUE))/2;
+            float avg = (DataMap.readFloat(DataMapKey.BUY_VALUE) + DataMap.readFloat(DataMapKey.SELL_VALUE)) / 2;
             DataMap.writeFloat(DataMapKey.AVG_COIN_VALUE, avg);
 
         } catch (Exception e) {
@@ -48,8 +45,9 @@ public class ServerReader implements IDataUpdater {
             ShowErrorToast(e);
         }
     }
+
     protected void ShowErrorToast(Exception e) {
-        DataMap.writeString(DataMapKey.ERROR_TOAST_CONTENT,e.getMessage());
+        DataMap.writeString(DataMapKey.ERROR_TOAST_CONTENT, e.getMessage());
     }
 
 }

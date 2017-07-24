@@ -11,10 +11,6 @@ public class ServiceLaunchReceiver extends BroadcastReceiver {
     private final static String BOOT_COMPLETE_INTENT = "android.intent.action.BOOT_COMPLETED";
     private final static String LAUNCH_APP = "android.intent.action.LAUNCH_APP";
 
-    public ServiceLaunchReceiver() {
-        super();
-    }
-
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(BOOT_COMPLETE_INTENT) || intent.getAction().equals(LAUNCH_APP)) {

@@ -392,16 +392,6 @@ public class HttpRequest {
     private static ConnectionFactory CONNECTION_FACTORY = ConnectionFactory.DEFAULT;
 
     /**
-     * Specify the {@link ConnectionFactory} used to create new requests.
-     */
-    public static void setConnectionFactory(final ConnectionFactory connectionFactory) {
-        if (connectionFactory == null)
-            CONNECTION_FACTORY = ConnectionFactory.DEFAULT;
-        else
-            CONNECTION_FACTORY = connectionFactory;
-    }
-
-    /**
      * Callback interface for reporting upload progress for a request.
      */
     public interface UploadProgress {

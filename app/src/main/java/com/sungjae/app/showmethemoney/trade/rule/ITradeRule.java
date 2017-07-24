@@ -2,55 +2,52 @@ package com.sungjae.app.showmethemoney.trade.rule;
 
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
-import com.sungjae.app.showmethemoney.data.IDataUpdater;
-import com.sungjae.app.showmethemoney.service.api.model.Balance;
-import com.sungjae.app.showmethemoney.service.api.model.Currency;
 
-/**
- * Created by bennj on 2017-07-18.
- */
 
 abstract public class ITradeRule {
-    float moneyValueAvail;
-    float coinAmount;
-    float buyValue;
-    float sellValue;
-    float tradeUnit;
-
+    protected float mMoneyValueAvail;
+    protected float mCoinAmount;
+    protected float mBuyValue;
+    protected float mSellValue;
+    protected float mTradeUnit;
 
     private void getValue() {
-        moneyValueAvail = DataMap.readFloat(DataMapKey.MONEY_VALUE_AVAIL);
-        coinAmount = DataMap.readFloat(DataMapKey.COIN_AMOUNT);
+        mMoneyValueAvail = DataMap.readFloat(DataMapKey.MONEY_VALUE_AVAIL);
+        mCoinAmount = DataMap.readFloat(DataMapKey.COIN_AMOUNT);
 
-        buyValue = DataMap.readFloat(DataMapKey.BUY_VALUE);
-        sellValue = DataMap.readFloat(DataMapKey.SELL_VALUE);
-        tradeUnit = DataMap.readFloat(DataMapKey.MIN_TRADE_UNIT);
+        mBuyValue = DataMap.readFloat(DataMapKey.BUY_VALUE);
+        mSellValue = DataMap.readFloat(DataMapKey.SELL_VALUE);
+        mTradeUnit = DataMap.readFloat(DataMapKey.MIN_TRADE_UNIT);
     }
 
     public void execute() {
-
         getValue();
 
-        float buyAmount=0f;
-        float sellAmount=0f;
+        float buyAmount = getBuyAmount();
+        float sellAmount = 0f;
 
-        buyAmount = getBuyAmount();
-        if(buyAmount==0f)
+        if (buyAmount == 0f) {
             sellAmount = getSellAmount();
+        }
 
         DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT, buyAmount);
         DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT, sellAmount);
 
     }
-    float checkAmount(float amount)
-    {
-        int Amount = (int) (amount * tradeUnit);
-        amount = (Amount / tradeUnit);
+
+    float checkAmount(float amount) {
+        int Amount = (int) (amount * mTradeUnit);
+        amount = (Amount / mTradeUnit);
         return amount;
     }
+
     abstract public boolean isEnabled();
+
     abstract float getSellAmount();
+
     abstract float getBuyAmount();
+
     abstract public void footer();
+
     abstract public void header();
 }

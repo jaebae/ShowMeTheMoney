@@ -14,7 +14,6 @@ public class Currency {
         mBuy = buy;
         mSell = sell;
 
-
         mMinTrade.put("BTC", 10000.0f);
         mMinTrade.put("ETH", 1000.0f);
         mMinTrade.put("DASH", 1000.0f);

@@ -5,45 +5,40 @@ import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
 
-/**
- * Created by bennj on 2017-07-19.
- */
 
 public class MoneyKeeper implements IDataUpdater {
-    float rawMoney;
-    float coinValue;
-    float totalValue;
-    boolean enabled;
-    float requestToKeep;
+    private float mRawMoney;
+    private float mCoinValue;
+    private float mTotalValue;
+    private boolean mEnabled;
+    private float mRequestToKeep;
 
     @Override
     public void getValue() {
-        rawMoney = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
-        coinValue = DataMap.readFloat(DataMapKey.COIN_AMOUNT);
-        totalValue = DataMap.readFloat(DataMapKey.TOTAL_VALUE_RAW);
+        mRawMoney = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
+        mCoinValue = DataMap.readFloat(DataMapKey.COIN_AMOUNT);
+        mTotalValue = DataMap.readFloat(DataMapKey.TOTAL_VALUE_RAW);
 
-        enabled = ConfigurationConstants.getEnabledMoneyKeeper();
+        mEnabled = ConfigurationConstants.getEnabledMoneyKeeper();
 
-        if(enabled)
-            requestToKeep = ConfigurationConstants.getKeepValueMoneyKeeper();
-        else
-            requestToKeep = 0;
+        if (mEnabled) {
+            mRequestToKeep = ConfigurationConstants.getKeepValueMoneyKeeper();
+        } else {
+            mRequestToKeep = 0;
+        }
     }
 
     @Override
     public void update() {
 
-        if(requestToKeep > rawMoney )
-        {
-            requestToKeep = rawMoney;
-            DataMap.writeString(DataMapKey.ERROR_TOAST_CONTENT,"not enough money = "+(requestToKeep-rawMoney));
+        if (mRequestToKeep > mRawMoney) {
+            mRequestToKeep = mRawMoney;
+            DataMap.writeString(DataMapKey.ERROR_TOAST_CONTENT, "not enough money = " + (mRequestToKeep - mRawMoney));
         }
 
-
-        Float availMoney = rawMoney - requestToKeep;
+        Float availMoney = mRawMoney - mRequestToKeep;
         DataMap.writeFloat(DataMapKey.MONEY_VALUE_AVAIL, availMoney);
-        Float availTotal = availMoney + coinValue;
-        DataMap.writeFloat(DataMapKey.TOTAL_VALUE_AVAIL, availMoney);
-
+        Float availTotal = availMoney + mCoinValue;
+        DataMap.writeFloat(DataMapKey.TOTAL_VALUE_AVAIL, availTotal);
     }
 }

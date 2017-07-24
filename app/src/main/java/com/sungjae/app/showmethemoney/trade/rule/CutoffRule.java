@@ -1,15 +1,10 @@
 package com.sungjae.app.showmethemoney.trade.rule;
 
-import android.app.NotificationManager;
-
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 
-/**
- * Created by bennj on 2017-07-20.
- */
 
 public class CutoffRule extends ITradeRule {
 
@@ -23,9 +18,9 @@ public class CutoffRule extends ITradeRule {
     @Override
     float getSellAmount() {
         float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.HIGH_CUT);
-        if (buyValue > cutOff) {
+        if (mBuyValue > cutOff) {
             bActivated = true;
-            return coinAmount;
+            return mCoinAmount;
         }
         return 0;
     }
@@ -33,10 +28,10 @@ public class CutoffRule extends ITradeRule {
     @Override
     float getBuyAmount() {
         float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.LOW_CUT);
-        if (cutOff > sellValue) {
+        if (cutOff > mSellValue) {
             float moneyValueRaw = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
             bActivated = true;
-            float buyAmount = checkAmount(moneyValueRaw / buyValue);
+            float buyAmount = checkAmount(moneyValueRaw / mBuyValue);
             return buyAmount;
         }
         return 0;

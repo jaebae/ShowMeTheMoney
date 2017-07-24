@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -102,11 +101,11 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         unregisterReceiver(mBroadcastReceiver);
     }
 
-    float mBuy;
-    float mSell;
-    float mBitMoney;
-    float mRealMoney;
-    float mAvailMoney;
+    private float mBuy;
+    private float mSell;
+    private float mBitMoney;
+    private float mRealMoney;
+    private float mAvailMoney;
 
     BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -147,18 +146,15 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         float bitMoney = mBitMoney * mSell;
         float total = bitMoney + mAvailMoney;
 
-        float investRate = DataMap.readFloat(SettingsActiviy.SETTING_HEADER+ConfigurationConstants.INVEST_RATE);
+        float investRate = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
         float expectedCoinValue = total * investRate;
         float diff = expectedCoinValue - bitMoney;
         float percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
 
         tv.setText("매도가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
-        if(percent<0)
-        {
+        if (percent < 0) {
             tv.setTextColor(Color.RED);
-        }
-        else
-        {
+        } else {
             tv.setTextColor(Color.BLUE);
         }
         bitMoney = mBitMoney * mBuy;
@@ -166,26 +162,23 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         diff = expectedCoinValue - bitMoney;
         percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
         float totalInput = ConfigurationConstants.getTotalInput();
-        float earnRate = (bitMoney+mRealMoney) / totalInput*100 -100;
+        float earnRate = (bitMoney + mRealMoney) / totalInput * 100 - 100;
 
         ((TextView) findViewById(R.id.totalInput)).setText("총 입금액 : " + (int) totalInput);
-        ((TextView) findViewById(R.id.earnRate)).setText("이익률 : " +  String.format("%.1f", earnRate) + "%");
+        ((TextView) findViewById(R.id.earnRate)).setText("이익률 : " + String.format("%.1f", earnRate) + "%");
 
         tv = (TextView) findViewById(R.id.bit_as_buy);
         tv.setText("매수가 기준 : " + mBitMoney + " / " + (int) bitMoney + " (" + (int) total + ") " + String.format("%.1f", percent) + "%");
-        if(percent<0)
-        {
+        if (percent < 0) {
             tv.setTextColor(Color.RED);
-        }
-        else
-        {
+        } else {
             tv.setTextColor(Color.BLUE);
         }
 //        tv = (TextView) findViewById(R.id.krw);
 //        tv.setText("가용 현금 : " + (int) mAvailMoney+" / 총 현금 : " +(int) mRealMoney+" / 보관금 : " +(int) (mRealMoney-mAvailMoney));
 
         ((TextView) findViewById(R.id.krw)).setText("가용 현금 : " + (int) mAvailMoney);
-        ((TextView) findViewById(R.id.krw3)).setText("보관금 : " + (int) (mRealMoney-mAvailMoney));
+        ((TextView) findViewById(R.id.krw3)).setText("보관금 : " + (int) (mRealMoney - mAvailMoney));
         ((TextView) findViewById(R.id.krw2)).setText("총 현금 : " + (int) mRealMoney);
         mPresenter.reloadList();
     }

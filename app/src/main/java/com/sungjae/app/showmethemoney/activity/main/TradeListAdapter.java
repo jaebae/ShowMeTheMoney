@@ -38,9 +38,9 @@ public class TradeListAdapter extends ResourceCursorAdapter {
         typeView.setText(cursor.getString(1));
         tradeView.setText(cursor.getString(2));
         //unitView.setText(trimNumber(cursor.getString(3)));
-        unitView.setText(""+cursor.getFloat(3));
-        priceView.setText(""+cursor.getFloat(4));
-        amountView.setText(""+cursor.getFloat(5));
+        unitView.setText("" + cursor.getFloat(3));
+        priceView.setText("" + cursor.getFloat(4));
+        amountView.setText("" + cursor.getFloat(5));
     }
 
     @NonNull
@@ -51,9 +51,7 @@ public class TradeListAdapter extends ResourceCursorAdapter {
         return dateFormat.format(date) + " \u200e" + timeFormat.format(date);
     }
 
-    public String
-
-    trimNumber(String str) {
+    public String trimNumber(String str) {
         int pointer = str.lastIndexOf('.');
         if (pointer > 0 && pointer + 3 < str.length()) {
             str = str.substring(0, pointer + 3);
