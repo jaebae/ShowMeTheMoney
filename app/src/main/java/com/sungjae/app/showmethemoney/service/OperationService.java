@@ -63,14 +63,16 @@ public class OperationService extends Service {
         operationThread.start();
     }
 
-    Handler mHandler;
+    static Handler mHandler;
 
     @NonNull
     private Handler getHandler() {
         mHandler = new Handler(getLooperHandlerThread()) {
             @Override
             public void handleMessage(Message msg) {
+                mHandler.removeCallbacksAndMessages(null);
                 doOperation();
+                mHandler.sendEmptyMessageDelayed(0,30000);
 
             }
         };
@@ -84,6 +86,11 @@ public class OperationService extends Service {
         return handlerThread.getLooper();
     }
 
+    static public void refresh()
+    {
+        if(mHandler!=null)
+            mHandler.sendEmptyMessage(0);
+    }
 
     protected void doOperation()
     {

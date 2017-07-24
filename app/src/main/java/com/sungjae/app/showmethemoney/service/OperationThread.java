@@ -10,15 +10,15 @@ public class OperationThread extends Thread {
         mHandler = handler;
     }
 
-    @Override
-    public void run() {
-        while (true) {
-            mHandler.sendEmptyMessage(0);
-            try {
-                Thread.sleep(30000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+//    @Override
+//    public void run() {
+//        while (true) {
+////            mHandler.sendEmptyMessageDelayed(0, 30000);
+////            try {
+////                Thread.sleep(30000);
+////            } catch (InterruptedException e) {
+////                e.printStackTrace();
+////            }
+//        }
+//    }
 }
