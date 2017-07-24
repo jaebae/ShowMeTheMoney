@@ -48,7 +48,7 @@ public class OperationServiceTest {
         when(mApi.getCurrency()).thenReturn(mCurrency);
         when(mOperationService.getContentResolver()).thenReturn(mock(ContentResolver.class));
         when(mOperationService.getApplicationContext()).thenReturn(mock(Context.class));
-        doNothing().when(mOperationService).ShowErrorToast(any(Exception.class));
+        //doNothing().when(mOperationService).ShowErrorToast(any(Exception.class));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class OperationServiceTest {
 
         float currency = BASE_CURRENCY;
 
-        when(mApi.sell(anyFloat())).thenAnswer(new Answer<ArrayList<Result>>() {
+        /*when(mApi.sell(anyFloat())).thenAnswer(new Answer<ArrayList<Result>>() {
             @Override
             public ArrayList<Result> answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
@@ -77,9 +77,9 @@ public class OperationServiceTest {
                 mBitMoney -= unit;
                 return null;
             }
-        });
+        });*/
 
-        when(mApi.buy(anyFloat())).thenAnswer(new Answer<ArrayList<Result>>() {
+        /*when(mApi.buy(anyFloat())).thenAnswer(new Answer<ArrayList<Result>>() {
             @Override
             public ArrayList<Result> answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
@@ -88,7 +88,7 @@ public class OperationServiceTest {
                 mBitMoney += unit * 0.9985f;
                 return null;
             }
-        });
+        });*/
 
         int i = 0;
         while (i < 360 * 40) {

@@ -8,8 +8,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -27,8 +25,6 @@ import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
 import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
-import com.sungjae.app.showmethemoney.service.api.model.Balance;
-import com.sungjae.app.showmethemoney.service.api.model.Currency;
 import com.sungjae.app.showmethemoney.service.api.model.Result;
 import com.sungjae.app.showmethemoney.trade.preProcessor.MoneyKeeper;
 import com.sungjae.app.showmethemoney.trade.preProcessor.ServerReader;
@@ -36,7 +32,6 @@ import com.sungjae.app.showmethemoney.trade.rule.ITradeRule;
 import com.sungjae.app.showmethemoney.trade.rule.TradeRuleFactory;
 import com.sungjae.com.app.showmethemoney.R;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -85,13 +80,12 @@ public class OperationService extends Service {
     }
 
 
-    protected void doOperation()
-    {
-        IDataUpdater updaters[] = new IDataUpdater[] {new ServerReader(mApi),new MoneyKeeper() };
+    protected void doOperation() {
+        IDataUpdater updaters[] = new IDataUpdater[]{new ServerReader(mApi), new MoneyKeeper()};
 
         //get data from server
         //calculate data to more data
-        for (IDataUpdater updater:updaters) {
+        for (IDataUpdater updater : updaters) {
             updater.getValue();
             updater.update();
         }
@@ -101,9 +95,8 @@ public class OperationService extends Service {
 
         //do rules...
         ITradeRule trList[] = TradeRuleFactory.getRules();
-        for(ITradeRule tr : trList)
-        {
-            if(tr.isEnabled()) {
+        for (ITradeRule tr : trList) {
+            if (tr.isEnabled()) {
                 tr.header();
                 tr.execute();
                 executeTrade();//do sell/buy
@@ -119,19 +112,18 @@ public class OperationService extends Service {
 
     }
 
-    private void executeTrade()
-    {
+    private void executeTrade() {
         try {
             ArrayList<Result> results = null;
             float unit = DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT);
-            DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT,0f);
+            DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT, 0f);
             if (unit != 0.0f) {
-                    results = mApi.buy(unit);
+                results = mApi.buy(unit);
 
             }
 
             unit = DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT);
-            DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT,0f);
+            DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT, 0f);
             if (unit != 0.0f) {
                 results = mApi.sell(unit);
             }
@@ -195,8 +187,6 @@ public class OperationService extends Service {
     }
 
 
-
-
     private ContentValues toContentValueCurrency() {
         ContentValues contentValue = new ContentValues();
         contentValue.put("date", System.currentTimeMillis());
@@ -207,8 +197,7 @@ public class OperationService extends Service {
     }
 
 
-
-    private ContentValues toContentValue( int currencyId) {
+    private ContentValues toContentValue(int currencyId) {
         ContentValues contentValue = new ContentValues();
         contentValue.put("currency", currencyId);
         contentValue.put("realMoney", DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW));
@@ -234,7 +223,10 @@ public class OperationService extends Service {
         ContentValues contentValue = toContentValueCurrency();
         Uri result = cr.insert(uri, contentValue);
         cr.notifyChange(uri, null);
-        return Integer.parseInt(result.getLastPathSegment());
+        if (result != null) {
+            return Integer.parseInt(result.getLastPathSegment());
+        }
+        return -1;
     }
 
 
@@ -261,7 +253,6 @@ public class OperationService extends Service {
     }
 
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -275,21 +266,20 @@ public class OperationService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private String createUpDownStatus()
-    {
+    private String createUpDownStatus() {
         StringBuilder out = new StringBuilder();
-        float rate24,rate12,rate1;
+        float rate24, rate12, rate1;
         float old = readCurrencyHistory(24);
-        rate24 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)-old )/old*100;
+        rate24 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE) - old) / old * 100;
         old = readCurrencyHistory(12);
-        rate12 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)-old )/old*100;
+        rate12 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE) - old) / old * 100;
         old = readCurrencyHistory(1);
-        rate1 = ( DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)-old )/old*100;
+        rate1 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE) - old) / old * 100;
 
-        out.append("["+COIN+"="+ String.format("%.0f",DataMap.readFloat(DataMapKey.AVG_COIN_VALUE))+"] ");
-        out.append("24H : "+String.format("%.1f",rate24)+"% ");
-        out.append("12H : "+String.format("%.1f",rate12)+"% ");
-        out.append("1H : "+String.format("%.1f",rate1)+"% ");
+        out.append("[" + COIN + "=" + String.format("%.0f", DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)) + "] ");
+        out.append("24H : " + String.format("%.1f", rate24) + "% ");
+        out.append("12H : " + String.format("%.1f", rate12) + "% ");
+        out.append("1H : " + String.format("%.1f", rate1) + "% ");
         return out.toString();
     }
 
@@ -298,29 +288,29 @@ public class OperationService extends Service {
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder mBuilder;
 
-            mBuilder = createNotification("등락",createUpDownStatus(),0);
+            mBuilder = createNotification("등락", createUpDownStatus(), 0);
             startForeground(1, mBuilder.build());
-            if(DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty()==false) {
-                mBuilder = createNotification("CUT OFF",DataMap.readString(DataMapKey.NOTIFICATION_CONTENT),Notification.DEFAULT_ALL);
+            if (DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty() == false) {
+                mBuilder = createNotification("CUT OFF", DataMap.readString(DataMapKey.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(2, mBuilder.build());
             }
-        } catch (Exception e)
-        {
+        } catch (Exception e) {
 
         }
 
     }
-    private NotificationCompat.Builder createNotification(String title, String content,int alert ){
+
+    private NotificationCompat.Builder createNotification(String title, String content, int alert) {
 //        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.coin);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.coin)
-            //    .setLargeIcon(icon)
+                //    .setLargeIcon(icon)
                 .setContentTitle(title)
                 .setContentTitle(content)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
                 .setDefaults(alert);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setCategory(Notification.CATEGORY_MESSAGE)
                     .setPriority(Notification.PRIORITY_HIGH)
                     .setVisibility(Notification.VISIBILITY_PUBLIC);
@@ -328,23 +318,23 @@ public class OperationService extends Service {
         return builder;
     }
 
-private float readCurrencyHistory(int hourBefore)
-{
-    float currency = 0f;
+    private float readCurrencyHistory(int hourBefore) {
+        float currency = 0f;
 
-    ContentResolver cr = getContentResolver();
+        ContentResolver cr = getContentResolver();
 
-    Uri uri = Uri.parse("content://trade/currency");
-    long current = System.currentTimeMillis();
-    long before = current - hourBefore*60*60*1000;
-    Cursor cursor = cr.query(uri, null, "date < ?", new String[] {Float.toString(before)},"date desc limit 0,1");
-    cursor.moveToFirst();
-    before = cursor.getLong(cursor.getColumnIndex("date"));
-    currency =    ( cursor.getFloat(cursor.getColumnIndex("sell"))+cursor.getFloat(cursor.getColumnIndex("buy")))/2;
+        Uri uri = Uri.parse("content://trade/currency");
+        long current = System.currentTimeMillis();
+        long before = current - hourBefore * 60 * 60 * 1000;
+        Cursor cursor = cr.query(uri, null, "date < ?", new String[]{Float.toString(before)}, "date desc limit 0,1");
+        cursor.moveToFirst();
+        before = cursor.getLong(cursor.getColumnIndex("date"));
+        currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
 
-    Log.d("SMTM","hour before="+hourBefore+"  before="+getLongToTime(this,before) +" / "+before+" currency="+currency );
-    return currency;
-}
+        Log.d("SMTM", "hour before=" + hourBefore + "  before=" + getLongToTime(this, before) + " / " + before + " currency=" + currency);
+        return currency;
+    }
+
     @NonNull
     private String getLongToTime(Context context, long date) {
         SimpleDateFormat dateFormat = (SimpleDateFormat) java.text.DateFormat
