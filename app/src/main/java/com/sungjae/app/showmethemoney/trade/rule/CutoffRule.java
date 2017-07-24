@@ -22,10 +22,9 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     float getSellAmount() {
-        float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER +ConfigurationConstants.HIGH_CUT);
-        if(buyValue > cutOff)
-        {
-            bActivated=true;
+        float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.HIGH_CUT);
+        if (buyValue > cutOff) {
+            bActivated = true;
             return coinAmount;
         }
         return 0;
@@ -33,11 +32,11 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     float getBuyAmount() {
-        float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER +ConfigurationConstants.LOW_CUT);
-        if(cutOff > sellValue)
-        {
-            bActivated=true;
-            float buyAmount = checkAmount ( moneyValueAvail / buyValue );
+        float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.LOW_CUT);
+        if (cutOff > sellValue) {
+            float moneyValueRaw = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
+            bActivated = true;
+            float buyAmount = checkAmount(moneyValueRaw / buyValue);
             return buyAmount;
         }
         return 0;
@@ -45,8 +44,7 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     public void footer() {
-        if(bActivated)
-        {
+        if (bActivated) {
             ConfigurationConstants.setEnabledBalancedRule(false);
             DataMap.writeString(DataMapKey.NOTIFICATION_CONTENT, "CUT OFF ACTIVATED");
             System.out.println("CUT OFF ACTIVATED -> turn off balanced rule");
@@ -55,6 +53,6 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     public void header() {
-        bActivated=false;
+        bActivated = false;
     }
 }
