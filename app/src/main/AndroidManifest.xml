@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/coin"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.sungjae.app.showmethemoney.activity.main.MainActivity">
+        <activity android:name="com.sungjae.app.showmethemoney.activity.main.MainActivity"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
