@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
@@ -49,25 +48,22 @@ public class OperationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        startOperationThread();
+        getHandler();
+
         Log.d("OperationService", "onCreate");
     }
 
-    protected void startOperationThread() {
-        OperationThread operationThread = new OperationThread(getHandler());
-        operationThread.start();
-    }
 
-    private Handler mHandler;
+    protected Handler mHandler;
 
     @NonNull
     private Handler getHandler() {
         mHandler = new Handler(getLooperHandlerThread()) {
             @Override
             public void handleMessage(Message msg) {
-                mHandler.removeCallbacksAndMessages(null);
+                removeCallbacksAndMessages(null);
                 doOperation();
-                mHandler.sendEmptyMessageDelayed(0, 30000);
+                sendEmptyMessageDelayed(0, 30000);
             }
         };
         return mHandler;
@@ -278,12 +274,11 @@ public class OperationService extends Service {
                 .setContentTitle(content)
                 .setAutoCancel(true)
                 .setWhen(System.currentTimeMillis())
-                .setDefaults(alert);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder.setCategory(Notification.CATEGORY_MESSAGE)
-                    .setPriority(Notification.PRIORITY_HIGH)
-                    .setVisibility(Notification.VISIBILITY_PUBLIC);
-        }
+                .setDefaults(alert)
+                .setCategory(Notification.CATEGORY_MESSAGE)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setVisibility(Notification.VISIBILITY_PUBLIC);
+
         return builder;
     }
 

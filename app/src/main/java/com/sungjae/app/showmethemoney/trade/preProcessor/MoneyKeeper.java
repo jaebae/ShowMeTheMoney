@@ -32,7 +32,6 @@ public class MoneyKeeper implements IDataUpdater {
     public void update() {
 
         if (mRequestToKeep > mRawMoney) {
-            //mRequestToKeep = mRawMoney;
             DataMap.writeString(DataMapKey.ERROR_TOAST_CONTENT, "not enough money = " + (mRequestToKeep - mRawMoney));
         }
 

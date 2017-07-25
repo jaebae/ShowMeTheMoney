@@ -6,7 +6,6 @@ import android.content.Context;
 import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
-import com.sungjae.app.showmethemoney.service.api.model.Result;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,18 +13,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-import java.util.ArrayList;
-
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyFloat;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -54,7 +49,8 @@ public class OperationServiceTest {
     @Test
     public void threadShouldRunOnCreate() throws Exception {
         mOperationService.onCreate();
-        verify(mOperationService).startOperationThread();
+
+        assertThat(mOperationService.mHandler, is(notNullValue()));
     }
 
     float mRealMoney = 1000000.f;
