@@ -260,6 +260,11 @@ public class OperationService extends Service {
                 mBuilder = createNotification("CUT OFF", DataMap.readString(DataMapKey.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(2, mBuilder.build());
             }
+            if (DataMap.readString(DataMapKey.ERROR_TOAST_CONTENT).isEmpty() == false) {
+                mBuilder = createNotification("ERROR", DataMap.readString(DataMapKey.ERROR_TOAST_CONTENT), Notification.DEFAULT_ALL);
+                mNotificationManager.notify(3, mBuilder.build());
+                Toast.makeText(this, DataMap.readString(DataMapKey.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
+            }
         } catch (Exception e) {
 
         }
