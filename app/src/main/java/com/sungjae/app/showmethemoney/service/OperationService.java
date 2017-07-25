@@ -289,16 +289,16 @@ public class OperationService extends Service {
 
     private float readCurrencyHistory(int hourBefore) {
         float currency = 0f;
-
         ContentResolver cr = getContentResolver();
 
         Uri uri = Uri.parse("content://trade/currency");
         long current = System.currentTimeMillis();
         long before = current - hourBefore * 60 * 60 * 1000;
-        Cursor cursor = cr.query(uri, null, "date < ?", new String[]{Float.toString(before)}, "date desc limit 0,1");
-        cursor.moveToFirst();
-        before = cursor.getLong(cursor.getColumnIndex("date"));
-        currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
+        try (Cursor cursor = cr.query(uri, null, "date < ?", new String[]{Float.toString(before)}, "date desc limit 0,1")) {
+            cursor.moveToFirst();
+            before = cursor.getLong(cursor.getColumnIndex("date"));
+            currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
+        }
 
         Log.d("SMTM", "hour before=" + hourBefore + "  before=" + getLongToTime(this, before) + " / " + before + " currency=" + currency);
         return currency;
