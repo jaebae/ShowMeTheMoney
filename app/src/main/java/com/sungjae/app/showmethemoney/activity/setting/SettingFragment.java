@@ -4,50 +4,37 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.support.annotation.Nullable;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListView;
 
 import com.sungjae.com.app.showmethemoney.R;
 
 import static com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants.syncSettingsToDataMap;
 
-public class SettingsActiviy extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+public class SettingFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String SETTING_HEADER = "SETTING_";
 
     @Override
-    protected void onResume() {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.pref);
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         update(getPreferenceScreen());
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.pref);
-        ListView v = getListView();
-        Button btn = new Button(this);
-        btn.setText("back");
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-        v.addFooterView(btn);
-
-    }
 
     private void update(Preference pref) {
         if (pref instanceof PreferenceGroup) {
@@ -66,5 +53,4 @@ public class SettingsActiviy extends PreferenceActivity implements SharedPrefere
         update(pref);
         syncSettingsToDataMap();
     }
-
 }

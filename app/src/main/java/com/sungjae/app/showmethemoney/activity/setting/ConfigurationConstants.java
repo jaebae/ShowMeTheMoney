@@ -49,11 +49,11 @@ public class ConfigurationConstants {
     }
 
     static public void syncSettingsToDataMap() {
-        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, ConfigurationConstants.getInvestRate());
-        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.KEEP_VALUE, ConfigurationConstants.getKeepValueMoneyKeeper());
+        DataMap.writeFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.INVEST_RATE, ConfigurationConstants.getInvestRate());
+        DataMap.writeFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.KEEP_VALUE, ConfigurationConstants.getKeepValueMoneyKeeper());
 
-        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.HIGH_CUT, ConfigurationConstants.getCutoffHigh());
-        DataMap.writeFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.LOW_CUT, ConfigurationConstants.getCutoffLow());
+        DataMap.writeFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.HIGH_CUT, ConfigurationConstants.getCutoffHigh());
+        DataMap.writeFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.LOW_CUT, ConfigurationConstants.getCutoffLow());
 
     }
 

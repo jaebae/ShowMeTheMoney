@@ -2,39 +2,35 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:title="총입금액"
-        android:editable="true"
         android:defaultValue="100000"
+        android:editable="true"
         android:inputType="numberDecimal"
         android:key="totalInput"
-        ></EditTextPreference>
-    <PreferenceCategory android:title="Balanced trade">
+        android:title="총입금액" />
 
+    <PreferenceCategory android:title="Balanced trade">
         <SwitchPreference
             android:defaultValue="true"
             android:key="enableBalanced"
             android:title="enable" />
         <EditTextPreference
-            android:title="sell diff"
+            android:defaultValue="7.0"
             android:editable="true"
-            android:defaultValue="3.0"
             android:inputType="numberDecimal"
             android:key="sellValue"
-            ></EditTextPreference>
+            android:title="sell diff" />
         <EditTextPreference
-            android:title="buy diff"
+            android:defaultValue="7.0"
             android:editable="true"
-            android:defaultValue="3.0"
             android:inputType="numberDecimal"
             android:key="buyValue"
-            ></EditTextPreference>
+            android:title="buy diff" />
         <EditTextPreference
-            android:title="Coin 투자 비중"
-            android:editable="true"
             android:defaultValue="0.5"
+            android:editable="true"
             android:inputType="numberDecimal"
             android:key="investRate"
-            ></EditTextPreference>
+            android:title="Coin 투자 비중" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Money Keeper">
@@ -43,34 +39,30 @@
             android:key="enableMoneyKeeper"
             android:title="enable" />
         <EditTextPreference
-            android:title="request to keep"
-            android:editable="true"
             android:defaultValue="0"
+            android:editable="true"
             android:inputType="numberDecimal"
             android:key="KeepValue"
-            ></EditTextPreference>
+            android:title="request to keep" />
     </PreferenceCategory>
 
-
-    <PreferenceCategory android:title="Cutoff trade(계획)"
-        >
+    <PreferenceCategory android:title="Cutoff trade(계획)">
         <SwitchPreference
             android:defaultValue="false"
             android:key="enableCutoff"
             android:title="enable" />
         <EditTextPreference
-            android:title="High cut"
-            android:editable="true"
             android:defaultValue="999999999"
-            android:inputType="numberDecimal"
-            android:key="HighCut"></EditTextPreference>
-        <EditTextPreference
-            android:title="Low cut"
             android:editable="true"
+            android:inputType="numberDecimal"
+            android:key="HighCut"
+            android:title="High cut" />
+        <EditTextPreference
             android:defaultValue="0"
+            android:editable="true"
             android:inputType="numberDecimal"
             android:key="LowCut"
-            ></EditTextPreference>
+            android:title="Low cut" />
     </PreferenceCategory>
 
 </PreferenceScreen>

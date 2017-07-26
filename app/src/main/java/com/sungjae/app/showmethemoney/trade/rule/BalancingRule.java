@@ -1,7 +1,7 @@
 package com.sungjae.app.showmethemoney.trade.rule;
 
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
-import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
+import com.sungjae.app.showmethemoney.activity.setting.SettingFragment;
 import com.sungjae.app.showmethemoney.data.DataMap;
 
 class BalancingRule extends ITradeRule {
@@ -40,7 +40,7 @@ class BalancingRule extends ITradeRule {
         float total = bitReal + mMoneyValueAvail;
 
 
-        float investRate = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
+        float investRate = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
         float expectedCoinValue = total * investRate;
         float diff = expectedCoinValue - bitReal;
         System.out.println("investRate = " + investRate);

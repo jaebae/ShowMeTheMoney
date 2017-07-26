@@ -14,7 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
-import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
+import com.sungjae.app.showmethemoney.activity.setting.SettingFragment;
+import com.sungjae.app.showmethemoney.activity.setting.SettingsActivity;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.com.app.showmethemoney.R;
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_setting:
-                Intent intent = new Intent(getApplicationContext(), SettingsActiviy.class);
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intent);
                 break;
 
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         float bitMoney = mBitMoney * mSell;
         float total = bitMoney + mAvailMoney;
 
-        float investRate = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
+        float investRate = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
         float expectedCoinValue = total * investRate;
         float diff = expectedCoinValue - bitMoney;
         float percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;

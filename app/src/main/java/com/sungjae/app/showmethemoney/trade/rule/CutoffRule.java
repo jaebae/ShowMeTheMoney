@@ -1,7 +1,7 @@
 package com.sungjae.app.showmethemoney.trade.rule;
 
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
-import com.sungjae.app.showmethemoney.activity.setting.SettingsActiviy;
+import com.sungjae.app.showmethemoney.activity.setting.SettingFragment;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 
@@ -17,7 +17,7 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     float getSellAmount() {
-        float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.HIGH_CUT);
+        float cutOff = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.HIGH_CUT);
         if (mBuyValue > cutOff) {
             bActivated = true;
             return mCoinAmount;
@@ -27,7 +27,7 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     float getBuyAmount() {
-        float cutOff = DataMap.readFloat(SettingsActiviy.SETTING_HEADER + ConfigurationConstants.LOW_CUT);
+        float cutOff = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.LOW_CUT);
         if (cutOff > mSellValue) {
             float moneyValueRaw = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
             bActivated = true;
