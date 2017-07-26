@@ -2,6 +2,7 @@ package com.sungjae.app.showmethemoney.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -20,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.sungjae.app.showmethemoney.activity.main.MainActivity;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
@@ -249,8 +251,16 @@ public class OperationService extends Service {
         try {
             NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder mBuilder;
+            Intent Intent = new Intent(this, MainActivity.class);
+            PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                    this,
+                    0,
+                    Intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
 
             mBuilder = createNotification("등락", createUpDownStatus(), 0);
+            mBuilder.setContentIntent(resultPendingIntent);
             startForeground(1, mBuilder.build());
             if (DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty() == false) {
                 mBuilder = createNotification("CUT OFF", DataMap.readString(DataMapKey.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
