@@ -18,13 +18,13 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.sungjae.app.showmethemoney.activity.main.MainActivity;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
+import com.sungjae.app.showmethemoney.log.MyLog;
 import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Result;
 import com.sungjae.app.showmethemoney.trade.preProcessor.MoneyKeeper;
@@ -44,7 +44,7 @@ public class OperationService extends Service {
 
     public OperationService() {
         super();
-        Log.d("OperationService", "OperationService");
+        MyLog.d(this, "OperationService");
     }
 
     @Override
@@ -52,7 +52,7 @@ public class OperationService extends Service {
         super.onCreate();
         getHandler();
 
-        Log.d("OperationService", "onCreate");
+        MyLog.d(this, "onCreate");
     }
 
 
@@ -63,7 +63,7 @@ public class OperationService extends Service {
         mHandler = new Handler(getLooperHandlerThread()) {
             @Override
             public void handleMessage(Message msg) {
-                removeCallbacksAndMessages(null);
+                removeMessages(0);
                 doOperation();
                 sendEmptyMessageDelayed(0, 30000);
             }
@@ -220,7 +220,7 @@ public class OperationService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("OperationService", "onBind");
+        MyLog.d(this, "onBind");
         return null;
     }
 
@@ -305,7 +305,7 @@ public class OperationService extends Service {
             currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
         }
 
-        Log.d("SMTM", "hour before=" + hourBefore + "  before=" + getLongToTime(this, before) + " / " + before + " currency=" + currency);
+        MyLog.d(this, "hour before=" + hourBefore + "  before=" + getLongToTime(this, before) + " / " + before + " currency=" + currency);
         return currency;
     }
 
