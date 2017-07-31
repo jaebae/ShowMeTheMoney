@@ -14,13 +14,13 @@
             android:key="enableBalanced"
             android:title="enable" />
         <EditTextPreference
-            android:defaultValue="7.0"
+            android:defaultValue="3.6"
             android:editable="true"
             android:inputType="numberDecimal"
             android:key="sellValue"
             android:title="sell diff" />
         <EditTextPreference
-            android:defaultValue="7.0"
+            android:defaultValue="3.6"
             android:editable="true"
             android:inputType="numberDecimal"
             android:key="buyValue"

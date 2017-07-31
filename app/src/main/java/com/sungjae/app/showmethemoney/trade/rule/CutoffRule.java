@@ -8,7 +8,7 @@ import com.sungjae.app.showmethemoney.data.DataMapKey;
 
 public class CutoffRule extends ITradeRule {
 
-    boolean bActivated;
+    boolean mActivated;
 
     @Override
     public boolean isEnabled() {
@@ -19,7 +19,7 @@ public class CutoffRule extends ITradeRule {
     float getSellAmount() {
         float cutOff = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.HIGH_CUT);
         if (mBuyValue > cutOff) {
-            bActivated = true;
+            mActivated = true;
             return mCoinAmount;
         }
         return 0;
@@ -30,7 +30,7 @@ public class CutoffRule extends ITradeRule {
         float cutOff = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.LOW_CUT);
         if (cutOff > mSellValue) {
             float moneyValueRaw = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
-            bActivated = true;
+            mActivated = true;
             float buyAmount = checkAmount(moneyValueRaw / mBuyValue);
             return buyAmount;
         }
@@ -39,7 +39,7 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     public void footer() {
-        if (bActivated) {
+        if (mActivated) {
             ConfigurationConstants.setEnabledBalancedRule(false);
             DataMap.writeString(DataMapKey.NOTIFICATION_CONTENT, "CUT OFF ACTIVATED");
             System.out.println("CUT OFF ACTIVATED -> turn off balanced rule");
@@ -48,6 +48,6 @@ public class CutoffRule extends ITradeRule {
 
     @Override
     public void header() {
-        bActivated = false;
+        mActivated = false;
     }
 }

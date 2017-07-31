@@ -30,8 +30,9 @@ abstract public class ITradeRule {
             sellAmount = getSellAmount();
         }
 
-        if(sellAmount>mCoinAmount)
-            sellAmount=checkAmount(mCoinAmount);
+        if (sellAmount > mCoinAmount) {
+            sellAmount = checkAmount(mCoinAmount);
+        }
 
         DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT, buyAmount);
         DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT, sellAmount);
