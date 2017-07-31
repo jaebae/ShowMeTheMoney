@@ -1,10 +1,9 @@
 package com.sungjae.app.showmethemoney.trade.preProcessor;
 
-import android.util.Log;
-
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
+import com.sungjae.app.showmethemoney.log.MyLog;
 import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
@@ -41,7 +40,7 @@ public class ServerReader implements IDataUpdater {
             DataMap.writeFloat(DataMapKey.AVG_COIN_VALUE, avg);
 
         } catch (Exception e) {
-            Log.e("ServerReader", e.getMessage());
+            MyLog.e(this, e.getMessage());
             ShowErrorToast(e);
         }
     }

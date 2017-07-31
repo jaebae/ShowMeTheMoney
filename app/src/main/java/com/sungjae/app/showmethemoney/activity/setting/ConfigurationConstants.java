@@ -2,18 +2,15 @@ package com.sungjae.app.showmethemoney.activity.setting;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import com.sungjae.app.showmethemoney.data.DataMap;
+import com.sungjae.app.showmethemoney.log.MyLog;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigurationConstants {
-
-    private final static String TAG = "ConfigurationConstants";
-
     private final static String CONFIG_FILE_NAME = "config.properties";
     private final static Properties PROPERTIES;
     public final static String INVEST_RATE = "investRate";
@@ -32,7 +29,7 @@ public class ConfigurationConstants {
         try (InputStream stream = ConfigurationConstants.class.getClassLoader().getResourceAsStream(CONFIG_FILE_NAME)) {
             PROPERTIES.load(stream);
         } catch (IOException e) {
-            Log.e(TAG, "init PROPERTIES Error : " + e);
+            MyLog.d(ConfigurationConstants.class, "init PROPERTIES Error : " + e);
         }
     }
 
@@ -110,7 +107,7 @@ public class ConfigurationConstants {
         if (mContext != null) {
             value = PreferenceManager.getDefaultSharedPreferences(mContext).getString(key, defaultValue.toString());
         }
-        System.out.println(key + " : " + value);
+        MyLog.d(ConfigurationConstants.class, key + " : " + value);
         return Float.parseFloat(value);
     }
 
@@ -120,7 +117,7 @@ public class ConfigurationConstants {
         if (mContext != null) {
             value = PreferenceManager.getDefaultSharedPreferences(mContext).getBoolean(key, defaultValue);
         }
-        Log.d(TAG, key + " : " + value);
+        MyLog.d(ConfigurationConstants.class, key + " : " + value);
         return value;
     }
 
@@ -128,7 +125,7 @@ public class ConfigurationConstants {
         if (mContext != null) {
             value = PreferenceManager.getDefaultSharedPreferences(mContext).edit().putBoolean(key, value).commit();
         }
-        System.out.println(key + " : " + value);
+        MyLog.d(ConfigurationConstants.class, key + " : " + value);
         syncSettingsToDataMap();
         return value;
     }

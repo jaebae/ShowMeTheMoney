@@ -3,6 +3,7 @@ package com.sungjae.app.showmethemoney.trade.rule;
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.activity.setting.SettingFragment;
 import com.sungjae.app.showmethemoney.data.DataMap;
+import com.sungjae.app.showmethemoney.log.MyLog;
 
 class BalancingRule extends ITradeRule {
 
@@ -13,14 +14,14 @@ class BalancingRule extends ITradeRule {
 
     protected float getSellAmount() {
         float out = Math.abs(Math.min(0, calcAmount(mBuyValue, ConfigurationConstants.getSellRate())));
-        System.out.println("getSellAmount = " + out + "\n====\n");
+        MyLog.d(this, "getSellAmount = " + out);
 
         return out;
     }
 
     protected float getBuyAmount() {
         float out = Math.max(0, calcAmount(mSellValue, ConfigurationConstants.getBuyRate()));
-        System.out.println("getBuyAmount = " + out + "\n====\n");
+        MyLog.d(this, "getBuyAmount = " + out );
         return out;
     }
 
@@ -43,11 +44,11 @@ class BalancingRule extends ITradeRule {
         float investRate = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
         float expectedCoinValue = total * investRate;
         float diff = expectedCoinValue - bitReal;
-        System.out.println("investRate = " + investRate);
-        System.out.println("mMoneyValueAvail = " + mMoneyValueAvail);
-        System.out.println("bitReal = " + bitReal);
-        System.out.println("total = " + total);
-        System.out.println("expectedCoinValue = " + expectedCoinValue);
+        MyLog.d(this, "investRate = " + investRate);
+        MyLog.d(this, "mMoneyValueAvail = " + mMoneyValueAvail);
+        MyLog.d(this, "bitReal = " + bitReal);
+        MyLog.d(this, "total = " + total);
+        MyLog.d(this, "expectedCoinValue = " + expectedCoinValue);
         //30 -> coin, money will be 70
         //money+bit == 100;
         //expected con = total * 0.3
@@ -55,7 +56,7 @@ class BalancingRule extends ITradeRule {
 
         if (diff != 0) {
             float percent = (diff / Math.min(mMoneyValueAvail, bitReal)) * 100.f;
-            System.out.println("\ndiff = " + diff + "\nPercent = " + percent);
+            MyLog.d(this, "diff = " + diff + " Percent = " + percent);
 
             if (Math.abs(percent) >= diffRate) {
                 amount = (diff) / coinUnitValue;
