@@ -3,7 +3,6 @@ package com.sungjae.app.showmethemoney.trade.rule;
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.activity.setting.SettingFragment;
 import com.sungjae.app.showmethemoney.data.DataMap;
-import com.sungjae.app.showmethemoney.data.DataMapKey;
 
 
 public class CutoffRule extends ITradeRule {
@@ -29,7 +28,7 @@ public class CutoffRule extends ITradeRule {
     float getBuyAmount() {
         float cutOff = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.LOW_CUT);
         if (cutOff > mSellValue) {
-            float moneyValueRaw = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
+            float moneyValueRaw = DataMap.readFloat(DataMap.MONEY_VALUE_RAW);
             mActivated = true;
             float buyAmount = checkAmount(moneyValueRaw / mBuyValue);
             return buyAmount;
@@ -41,7 +40,7 @@ public class CutoffRule extends ITradeRule {
     public void footer() {
         if (mActivated) {
             ConfigurationConstants.setEnabledBalancedRule(false);
-            DataMap.writeString(DataMapKey.NOTIFICATION_CONTENT, "CUT OFF ACTIVATED");
+            DataMap.writeString(DataMap.NOTIFICATION_CONTENT, "CUT OFF ACTIVATED");
             System.out.println("CUT OFF ACTIVATED -> turn off balanced rule");
         }
     }

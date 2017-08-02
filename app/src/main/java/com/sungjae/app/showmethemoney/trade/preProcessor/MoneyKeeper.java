@@ -2,7 +2,6 @@ package com.sungjae.app.showmethemoney.trade.preProcessor;
 
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.data.DataMap;
-import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
 
 
@@ -15,9 +14,9 @@ public class MoneyKeeper implements IDataUpdater {
 
     @Override
     public void getValue() {
-        mRawMoney = DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW);
-        mCoinValue = DataMap.readFloat(DataMapKey.COIN_AMOUNT);
-        mTotalValue = DataMap.readFloat(DataMapKey.TOTAL_VALUE_RAW);
+        mRawMoney = DataMap.readFloat(DataMap.MONEY_VALUE_RAW);
+        mCoinValue = DataMap.readFloat(DataMap.COIN_AMOUNT);
+        mTotalValue = DataMap.readFloat(DataMap.TOTAL_VALUE_RAW);
 
         mEnabled = ConfigurationConstants.getEnabledMoneyKeeper();
 
@@ -32,12 +31,12 @@ public class MoneyKeeper implements IDataUpdater {
     public void update() {
 
         if (mRequestToKeep > mRawMoney) {
-            DataMap.writeString(DataMapKey.ERROR_TOAST_CONTENT, "not enough money = " + (mRequestToKeep - mRawMoney));
+            DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, "not enough money = " + (mRequestToKeep - mRawMoney));
         }
 
         Float availMoney = mRawMoney - mRequestToKeep;
-        DataMap.writeFloat(DataMapKey.MONEY_VALUE_AVAIL, availMoney);
+        DataMap.writeFloat(DataMap.MONEY_VALUE_AVAIL, availMoney);
         Float availTotal = availMoney + mCoinValue;
-        DataMap.writeFloat(DataMapKey.TOTAL_VALUE_AVAIL, availTotal);
+        DataMap.writeFloat(DataMap.TOTAL_VALUE_AVAIL, availTotal);
     }
 }

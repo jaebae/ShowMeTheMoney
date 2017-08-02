@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.sungjae.app.showmethemoney.activity.main.MainActivity;
 import com.sungjae.app.showmethemoney.data.DataMap;
-import com.sungjae.app.showmethemoney.data.DataMapKey;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
 import com.sungjae.app.showmethemoney.log.MyLog;
 import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
@@ -112,14 +111,14 @@ public class OperationService extends Service {
     private void executeTrade() {
         try {
             ArrayList<Result> results = null;
-            float unit = DataMap.readFloat(DataMapKey.TRADE_BUY_AMOUNT);
-            DataMap.writeFloat(DataMapKey.TRADE_BUY_AMOUNT, 0f);
+            float unit = DataMap.readFloat(DataMap.TRADE_BUY_AMOUNT);
+            DataMap.writeFloat(DataMap.TRADE_BUY_AMOUNT, 0f);
             if (unit != 0.0f) {
                 results = mApi.buy(unit);
             }
 
-            unit = DataMap.readFloat(DataMapKey.TRADE_SELL_AMOUNT);
-            DataMap.writeFloat(DataMapKey.TRADE_SELL_AMOUNT, 0f);
+            unit = DataMap.readFloat(DataMap.TRADE_SELL_AMOUNT);
+            DataMap.writeFloat(DataMap.TRADE_SELL_AMOUNT, 0f);
             if (unit != 0.0f) {
                 results = mApi.sell(unit);
             }
@@ -138,11 +137,11 @@ public class OperationService extends Service {
 
     private void updateView() {
         Intent intent = new Intent("UPDATE_VIEW");
-        intent.putExtra("buy", DataMap.readFloat(DataMapKey.BUY_VALUE));
-        intent.putExtra("sell", DataMap.readFloat(DataMapKey.SELL_VALUE));
-        intent.putExtra("bitMoney", DataMap.readFloat(DataMapKey.COIN_AMOUNT));
-        intent.putExtra("realMoney", DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW));
-        intent.putExtra("realMoneyAvailable", DataMap.readFloat(DataMapKey.MONEY_VALUE_AVAIL));
+        intent.putExtra("buy", DataMap.readFloat(DataMap.BUY_VALUE));
+        intent.putExtra("sell", DataMap.readFloat(DataMap.SELL_VALUE));
+        intent.putExtra("bitMoney", DataMap.readFloat(DataMap.COIN_AMOUNT));
+        intent.putExtra("realMoney", DataMap.readFloat(DataMap.MONEY_VALUE_RAW));
+        intent.putExtra("realMoneyAvailable", DataMap.readFloat(DataMap.MONEY_VALUE_AVAIL));
 
         getApplicationContext().sendBroadcast(intent);
     }
@@ -152,8 +151,8 @@ public class OperationService extends Service {
         ContentValues contentValue = new ContentValues();
         contentValue.put("date", System.currentTimeMillis());
         contentValue.put("coin", COIN);
-        contentValue.put("sell", DataMap.readFloat(DataMapKey.SELL_VALUE));
-        contentValue.put("buy", DataMap.readFloat(DataMapKey.BUY_VALUE));
+        contentValue.put("sell", DataMap.readFloat(DataMap.SELL_VALUE));
+        contentValue.put("buy", DataMap.readFloat(DataMap.BUY_VALUE));
         return contentValue;
     }
 
@@ -161,8 +160,8 @@ public class OperationService extends Service {
     private ContentValues toContentValue(int currencyId) {
         ContentValues contentValue = new ContentValues();
         contentValue.put("currency", currencyId);
-        contentValue.put("realMoney", DataMap.readFloat(DataMapKey.MONEY_VALUE_RAW));
-        contentValue.put("bitMoney", DataMap.readFloat(DataMapKey.COIN_AMOUNT));
+        contentValue.put("realMoney", DataMap.readFloat(DataMap.MONEY_VALUE_RAW));
+        contentValue.put("bitMoney", DataMap.readFloat(DataMap.COIN_AMOUNT));
         return contentValue;
     }
 
@@ -234,13 +233,13 @@ public class OperationService extends Service {
         StringBuilder out = new StringBuilder();
         float rate24, rate12, rate1;
         float old = readCurrencyHistory(24);
-        rate24 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE) - old) / old * 100;
+        rate24 = (DataMap.readFloat(DataMap.AVG_COIN_VALUE) - old) / old * 100;
         old = readCurrencyHistory(12);
-        rate12 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE) - old) / old * 100;
+        rate12 = (DataMap.readFloat(DataMap.AVG_COIN_VALUE) - old) / old * 100;
         old = readCurrencyHistory(1);
-        rate1 = (DataMap.readFloat(DataMapKey.AVG_COIN_VALUE) - old) / old * 100;
+        rate1 = (DataMap.readFloat(DataMap.AVG_COIN_VALUE) - old) / old * 100;
 
-        out.append("[" + COIN + "=" + String.format("%.0f", DataMap.readFloat(DataMapKey.AVG_COIN_VALUE)) + "] ");
+        out.append("[" + COIN + "=" + String.format("%.0f", DataMap.readFloat(DataMap.AVG_COIN_VALUE)) + "] ");
         out.append("24H : " + String.format("%.1f", rate24) + "% ");
         out.append("12H : " + String.format("%.1f", rate12) + "% ");
         out.append("1H : " + String.format("%.1f", rate1) + "% ");
@@ -262,14 +261,14 @@ public class OperationService extends Service {
             mBuilder = createNotification("등락", createUpDownStatus(), 0);
             mBuilder.setContentIntent(resultPendingIntent);
             startForeground(1, mBuilder.build());
-            if (DataMap.readString(DataMapKey.NOTIFICATION_CONTENT).isEmpty() == false) {
-                mBuilder = createNotification("CUT OFF", DataMap.readString(DataMapKey.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
+            if (DataMap.readString(DataMap.NOTIFICATION_CONTENT).isEmpty() == false) {
+                mBuilder = createNotification("CUT OFF", DataMap.readString(DataMap.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(2, mBuilder.build());
             }
-            if (DataMap.readString(DataMapKey.ERROR_TOAST_CONTENT).isEmpty() == false) {
-                mBuilder = createNotification("ERROR", DataMap.readString(DataMapKey.ERROR_TOAST_CONTENT), Notification.DEFAULT_ALL);
+            if (DataMap.readString(DataMap.ERROR_TOAST_CONTENT).isEmpty() == false) {
+                mBuilder = createNotification("ERROR", DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(3, mBuilder.build());
-                Toast.makeText(this, DataMap.readString(DataMapKey.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
 
