@@ -18,6 +18,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sungjae.app.showmethemoney.activity.main.MainActivity;
@@ -270,11 +271,11 @@ public class OperationService extends Service {
             mBuilder = createNotification("등락", createUpDownStatus(), 0);
             mBuilder.setContentIntent(resultPendingIntent);
             startForeground(1, mBuilder.build());
-            if (DataMap.readString(DataMap.NOTIFICATION_CONTENT).isEmpty() == false) {
+            if (!TextUtils.isEmpty(DataMap.readString(DataMap.NOTIFICATION_CONTENT))) {
                 mBuilder = createNotification("CUT OFF", DataMap.readString(DataMap.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(2, mBuilder.build());
             }
-            if (DataMap.readString(DataMap.ERROR_TOAST_CONTENT).isEmpty() == false) {
+            if (!TextUtils.isEmpty(DataMap.readString(DataMap.ERROR_TOAST_CONTENT))) {
                 mBuilder = createNotification("ERROR", DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(3, mBuilder.build());
                 Toast.makeText(this, DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
@@ -308,9 +309,10 @@ public class OperationService extends Service {
         long current = System.currentTimeMillis();
         long before = current - hourBefore * 60 * 60 * 1000;
         try (Cursor cursor = cr.query(uri, null, "date < ?", new String[]{Float.toString(before)}, "date desc limit 0,1")) {
-            cursor.moveToFirst();
-            before = cursor.getLong(cursor.getColumnIndex("date"));
-            currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
+            if (cursor.moveToFirst()) {
+                before = cursor.getLong(cursor.getColumnIndex("date"));
+                currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
+            }
         }
 
         MyLog.d(this, "hour before=" + hourBefore + "  before=" + getLongToTime(this, before) + " / " + before + " currency=" + currency);
