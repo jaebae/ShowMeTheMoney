@@ -21,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.sungjae.app.showmethemoney.activity.main.MainActivity;
+import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
 import com.sungjae.app.showmethemoney.log.MyLog;
@@ -38,7 +39,7 @@ import java.util.Locale;
 
 
 public class OperationService extends Service {
-    private final static String COIN = "ETH";
+    private final static String COIN = ConfigurationConstants.getCurrency();
     ApiWrapper mApi = new ApiWrapper(COIN);
 
     public OperationService() {
@@ -81,24 +82,32 @@ public class OperationService extends Service {
     protected void doOperation() {
         IDataUpdater updaters[] = new IDataUpdater[]{new ServerReader(mApi), new MoneyKeeper()};
 
+        boolean result = false;
+
         //get data from server
         //calculate data to more data
         for (IDataUpdater updater : updaters) {
             updater.getValue();
-            updater.update();
+            result = updater.update();
+            if (!result) {
+                break;
+            }
         }
-        // TODO: ADD balance currency to DB
-        int currencyId = insertToCurrencyHistory();
-        insertToBalanceHistory(currencyId);
 
-        //do rules...
-        ITradeRule trList[] = TradeRuleFactory.getRules();
-        for (ITradeRule tr : trList) {
-            if (tr.isEnabled()) {
-                tr.header();
-                tr.execute();
-                executeTrade();//do sell/buy
-                tr.footer();
+        if (result == true) {
+            // TODO: ADD balance currency to DB
+            int currencyId = insertToCurrencyHistory();
+            insertToBalanceHistory(currencyId);
+
+            //do rules...
+            ITradeRule trList[] = TradeRuleFactory.getRules();
+            for (ITradeRule tr : trList) {
+                if (tr.isEnabled()) {
+                    tr.header();
+                    tr.execute();
+                    executeTrade();//do sell/buy
+                    tr.footer();
+                }
             }
         }
 
@@ -271,7 +280,7 @@ public class OperationService extends Service {
                 Toast.makeText(this, DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-
+            Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
     }

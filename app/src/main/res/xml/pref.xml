@@ -8,6 +8,13 @@
         android:key="totalInput"
         android:title="총입금액" />
 
+    <EditTextPreference
+        android:defaultValue="ETH"
+        android:editable="true"
+        android:inputType="text"
+        android:key="currency"
+        android:title="화폐" />
+
     <PreferenceCategory android:title="Balanced trade">
         <SwitchPreference
             android:defaultValue="true"

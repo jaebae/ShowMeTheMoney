@@ -28,7 +28,7 @@ public class MoneyKeeper implements IDataUpdater {
     }
 
     @Override
-    public void update() {
+    public boolean update() {
 
         if (mRequestToKeep > mRawMoney) {
             DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, "not enough money = " + (mRequestToKeep - mRawMoney));
@@ -38,5 +38,7 @@ public class MoneyKeeper implements IDataUpdater {
         DataMap.writeFloat(DataMap.MONEY_VALUE_AVAIL, availMoney);
         Float availTotal = availMoney + mCoinValue;
         DataMap.writeFloat(DataMap.TOTAL_VALUE_AVAIL, availTotal);
+
+        return true;
     }
 }

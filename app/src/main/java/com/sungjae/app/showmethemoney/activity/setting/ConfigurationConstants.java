@@ -11,8 +11,10 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigurationConstants {
+
     private final static String CONFIG_FILE_NAME = "config.properties";
     private final static Properties PROPERTIES;
+    private final static String CURRENCY = "currency";
     public final static String INVEST_RATE = "investRate";
     public final static String ENABLE_MONEY_KEEPER = "enableMoneyKeeper";
     public final static String KEEP_VALUE = "KeepValue";
@@ -37,6 +39,7 @@ public class ConfigurationConstants {
     public static final String SECRET_KEY = PROPERTIES.getProperty("SECRET_KEY");
     private static final float MIN_DIFF_VALUE = 3.0f;
     private static final float INVEST_RATE_DEFAULT = 0.5f;
+    private static final String CURRENCY_DEFAULT = "ETH";
 
     private static Context mContext;
 
@@ -64,6 +67,10 @@ public class ConfigurationConstants {
 
     public static float getInvestRate() {
         return getPreferenceFloat(INVEST_RATE, INVEST_RATE_DEFAULT);
+    }
+
+    public static String getCurrency() {
+        return getPreferenceString(CURRENCY, CURRENCY_DEFAULT);
     }
 
 
@@ -127,6 +134,14 @@ public class ConfigurationConstants {
         }
         MyLog.d(ConfigurationConstants.class, key + " : " + value);
         syncSettingsToDataMap();
+        return value;
+    }
+
+    private static String getPreferenceString(String key, String value) {
+        if (mContext != null) {
+            value = PreferenceManager.getDefaultSharedPreferences(mContext).getString(key, value);
+        }
+        MyLog.d(ConfigurationConstants.class, key + " : " + value);
         return value;
     }
 }

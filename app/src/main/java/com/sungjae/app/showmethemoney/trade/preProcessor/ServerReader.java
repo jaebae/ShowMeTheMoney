@@ -7,6 +7,8 @@ import com.sungjae.app.showmethemoney.service.api.ApiWrapper;
 import com.sungjae.app.showmethemoney.service.api.model.Balance;
 import com.sungjae.app.showmethemoney.service.api.model.Currency;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 
 public class ServerReader implements IDataUpdater {
     private ApiWrapper mApi;
@@ -21,7 +23,7 @@ public class ServerReader implements IDataUpdater {
     }
 
     @Override
-    public void update() {
+    public boolean update() {
         try {
             Currency c = mApi.getCurrency();
             Balance b = mApi.getBalance(c);
@@ -39,9 +41,12 @@ public class ServerReader implements IDataUpdater {
             DataMap.writeFloat(DataMap.AVG_COIN_VALUE, avg);
 
         } catch (Exception e) {
-            MyLog.e(this, e.getMessage());
+            String msg = StringEscapeUtils.unescapeJava(e.getMessage());
+            MyLog.e(this, msg);
             ShowErrorToast(e);
+            return false;
         }
+        return true;
     }
 
     protected void ShowErrorToast(Exception e) {

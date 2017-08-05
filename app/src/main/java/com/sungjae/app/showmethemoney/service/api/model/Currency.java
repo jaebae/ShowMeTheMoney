@@ -14,12 +14,13 @@ public class Currency {
         mBuy = buy;
         mSell = sell;
 
-        mMinTrade.put("BTC", 10000.0f);
-        mMinTrade.put("ETH", 1000.0f);
-        mMinTrade.put("DASH", 1000.0f);
-        mMinTrade.put("LTC", 100.0f);
-        mMinTrade.put("ETC", 100.0f);
-        mMinTrade.put("XRP", 1.0f);
+        mMinTrade.put("BCH", 1000.0f);
+        mMinTrade.put("BTC", 1000.0f);
+        mMinTrade.put("ETH", 100.0f);
+        mMinTrade.put("DASH", 100.0f);
+        mMinTrade.put("LTC", 10.0f);
+        mMinTrade.put("ETC", 10.0f);
+        mMinTrade.put("XRP", 10.0f);
     }
 
     @Override
