@@ -3,15 +3,15 @@ package com.sungjae.app.showmethemoney.activity.main;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
 import com.sungjae.com.app.showmethemoney.R;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.Date;
 
 
 public class TradeListAdapter extends ResourceCursorAdapter {
@@ -45,10 +45,8 @@ public class TradeListAdapter extends ResourceCursorAdapter {
 
     @NonNull
     private String getLongToTime(Context context, long date) {
-        SimpleDateFormat dateFormat = (SimpleDateFormat) java.text.DateFormat
-                .getDateInstance(java.text.DateFormat.SHORT, Locale.getDefault());
-        SimpleDateFormat timeFormat = (SimpleDateFormat) DateFormat.getTimeFormat(context);
-        return dateFormat.format(date) + " \u200e" + timeFormat.format(date);
+        DateFormat formatter = new SimpleDateFormat("YY/MM/dd HH:mm");
+        return formatter.format(new Date(date));
     }
 
     public String trimNumber(String str) {
