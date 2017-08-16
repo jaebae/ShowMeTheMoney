@@ -249,7 +249,7 @@ public class OperationService extends Service {
         old = readCurrencyHistory(1);
         rate1 = (DataMap.readFloat(DataMap.AVG_COIN_VALUE) - old) / old * 100;
 
-        out.append("[" + COIN + "=" + String.format("%.0f", DataMap.readFloat(DataMap.AVG_COIN_VALUE)) + "] ");
+        out.append(String.format("[%,.0f] ", DataMap.readFloat(DataMap.AVG_COIN_VALUE)));
         out.append("24H : " + String.format("%.1f", rate24) + "% ");
         out.append("12H : " + String.format("%.1f", rate12) + "% ");
         out.append("1H : " + String.format("%.1f", rate1) + "% ");
