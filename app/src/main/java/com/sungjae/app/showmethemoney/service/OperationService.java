@@ -279,6 +279,7 @@ public class OperationService extends Service {
                 mBuilder = createNotification("ERROR", DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(3, mBuilder.build());
                 Toast.makeText(this, DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
+                DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, "");
             }
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();

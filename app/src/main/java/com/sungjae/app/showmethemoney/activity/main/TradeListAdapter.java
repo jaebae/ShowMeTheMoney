@@ -38,9 +38,9 @@ public class TradeListAdapter extends ResourceCursorAdapter {
         typeView.setText(cursor.getString(1));
         tradeView.setText(cursor.getString(2));
         //unitView.setText(trimNumber(cursor.getString(3)));
-        unitView.setText("" + cursor.getFloat(3));
-        priceView.setText("" + cursor.getFloat(4));
-        amountView.setText("" + cursor.getFloat(5));
+        unitView.setText(String.format("%.02f", cursor.getFloat(3)));
+        priceView.setText(String.format("%.0f", cursor.getFloat(4)));
+        amountView.setText(String.format("%.0f", cursor.getFloat(5)));
     }
 
     @NonNull
