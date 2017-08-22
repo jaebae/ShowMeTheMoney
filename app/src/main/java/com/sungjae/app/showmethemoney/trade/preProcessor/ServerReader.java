@@ -43,14 +43,14 @@ public class ServerReader implements IDataUpdater {
         } catch (Exception e) {
             String msg = StringEscapeUtils.unescapeJava(e.getMessage());
             MyLog.e(this, msg);
-            ShowErrorToast(e);
+            ShowErrorToast(msg);
             return false;
         }
         return true;
     }
 
-    protected void ShowErrorToast(Exception e) {
-        DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, e.getMessage());
+    protected void ShowErrorToast(String msg ) {
+        DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, msg);
     }
 
 }

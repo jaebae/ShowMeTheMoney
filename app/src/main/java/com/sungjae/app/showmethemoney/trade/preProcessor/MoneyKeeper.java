@@ -3,6 +3,7 @@ package com.sungjae.app.showmethemoney.trade.preProcessor;
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.data.DataMap;
 import com.sungjae.app.showmethemoney.data.IDataUpdater;
+import com.sungjae.app.showmethemoney.log.MyLog;
 
 
 public class MoneyKeeper implements IDataUpdater {
@@ -31,7 +32,7 @@ public class MoneyKeeper implements IDataUpdater {
     public boolean update() {
 
         if (mRequestToKeep > mRawMoney) {
-            DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, "not enough money = " + (mRequestToKeep - mRawMoney));
+            MyLog.e(this, "not enough money = " + (mRequestToKeep - mRawMoney));
         }
 
         Float availMoney = mRawMoney - mRequestToKeep;

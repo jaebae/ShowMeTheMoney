@@ -38,6 +38,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import static com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants.syncSettingsToDataMap;
+
 
 public class OperationService extends Service {
     private final static String COIN = ConfigurationConstants.getCurrency();
@@ -51,6 +53,7 @@ public class OperationService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        syncSettingsToDataMap();
         getHandler();
 
         MyLog.d(this, "onCreate");
@@ -267,20 +270,26 @@ public class OperationService extends Service {
                     Intent,
                     PendingIntent.FLAG_UPDATE_CURRENT
             );
-
-            mBuilder = createNotification("등락", createUpDownStatus(), 0);
-            mBuilder.setContentIntent(resultPendingIntent);
-            startForeground(1, mBuilder.build());
             if (!TextUtils.isEmpty(DataMap.readString(DataMap.NOTIFICATION_CONTENT))) {
                 mBuilder = createNotification("CUT OFF", DataMap.readString(DataMap.NOTIFICATION_CONTENT), Notification.DEFAULT_ALL);
                 mNotificationManager.notify(2, mBuilder.build());
+                DataMap.writeString(DataMap.NOTIFICATION_CONTENT,"");
             }
+
             if (!TextUtils.isEmpty(DataMap.readString(DataMap.ERROR_TOAST_CONTENT))) {
-                mBuilder = createNotification("ERROR", DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Notification.DEFAULT_ALL);
-                mNotificationManager.notify(3, mBuilder.build());
+                mBuilder = createNotification("ERROR", DataMap.readString(DataMap.ERROR_TOAST_CONTENT), 0);
+                //startForeground(1, mBuilder.build());
                 Toast.makeText(this, DataMap.readString(DataMap.ERROR_TOAST_CONTENT), Toast.LENGTH_LONG).show();
                 DataMap.writeString(DataMap.ERROR_TOAST_CONTENT, "");
             }
+            else
+            {
+                mBuilder = createNotification("등락", createUpDownStatus(), 0);
+                mBuilder.setContentIntent(resultPendingIntent);
+            }
+
+            startForeground(1, mBuilder.build());
+
         } catch (Exception e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
