@@ -13,6 +13,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.GraphView;
 import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.activity.setting.SettingFragment;
 import com.sungjae.app.showmethemoney.activity.setting.SettingsActivity;
@@ -25,6 +26,7 @@ import static com.sungjae.app.showmethemoney.activity.setting.ConfigurationConst
 public class MainActivity extends AppCompatActivity implements TradeViewInterface {
     private ListView mListView;
     private TradePresenter mPresenter;
+    CurrencyGraph graph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         registerBroadcastReceivers();
         Intent intent = new Intent("android.intent.action.LAUNCH_APP");
         this.sendBroadcast(intent);
+        graph = new CurrencyGraph(this, (GraphView) findViewById(R.id.graph));
 
     }
 
@@ -182,5 +185,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         ((TextView) findViewById(R.id.krw3)).setText("보관금 : " + (int) (mRealMoney - mAvailMoney));
         ((TextView) findViewById(R.id.krw2)).setText("총 현금 : " + (int) mRealMoney);
         mPresenter.reloadList();
+
+        graph.add(( mBuy+mSell)/2) ;
     }
 }
