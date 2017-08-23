@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             mAvailMoney = (int) intent.getFloatExtra("realMoneyAvailable", 0.f);
 
             updateView();
+            //graph.refresh();
+
             graph.add(( mBuy+mSell)/2) ;
         }
     };

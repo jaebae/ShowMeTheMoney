@@ -33,20 +33,19 @@ public class CurrencyGraph {
     public CurrencyGraph(Context ctx,GraphView graph) {
         this.ctx=ctx;
         //GraphView graph = (GraphView) findViewById(R.id.graph);
-        series = new LineGraphSeries<>(readCurrencyHistory());
+        series = new LineGraphSeries<>();
         graph.addSeries(series);
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
-        graph.getViewport().setMaxX(MAX);
+        graph.getViewport().setMaxX(MAX-1);
         graph.getGridLabelRenderer().setNumHorizontalLabels(0);
         this.graph=graph;
     }
 
     public void refresh()
     {
-        graph.removeAllSeries();
-        series = new LineGraphSeries<>(readCurrencyHistory());
-        graph.addSeries(series);
+        idx=0;
+        series.resetData(readCurrencyHistory());
 
     }
     private String getTime() {
@@ -61,12 +60,14 @@ public class CurrencyGraph {
     {
         MyLog.d(ctx,"GRAPH_ADD = "+currency);
         if(currency==0) return;
-        series.appendData(new DataPoint(idx++,currency),true,MAX);
+        if(series!=null)
+            series.appendData(new DataPoint(idx++,currency),true,MAX);
     }
 
     private DataPoint[] readCurrencyHistory() {
         float currency = 0f;
         ContentResolver cr = ctx.getContentResolver();
+        dps.clear();
 
         Uri uri = Uri.parse("content://trade/currency");
         try (Cursor cursor = cr.query(uri, null, "coin = ?", new String[]{ConfigurationConstants.getCurrency()}, "date desc limit 0,"+MAX)) {
@@ -76,7 +77,7 @@ public class CurrencyGraph {
                     Long before = cursor.getLong(cursor.getColumnIndex("date"));
                     currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
                     if(currency==0) continue;
-                    MyLog.d(ctx,"GRAPH_INIT = ["+getTime(before)+"] "+currency);
+                    MyLog.d(ctx,"GRAPH_INIT = ["+getTime(before)+"/"+idx+"] "+currency);
                     dps.add(new DataPoint(idx++, currency));
                     cursor.moveToPrevious();
                 }
