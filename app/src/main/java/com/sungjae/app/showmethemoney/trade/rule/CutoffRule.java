@@ -19,6 +19,7 @@ public class CutoffRule extends ITradeRule {
         float cutOff = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.HIGH_CUT);
         if (mBuyValue > cutOff) {
             mActivated = true;
+            ConfigurationConstants.setCutoffHigh(9999999999f);
             return mCoinAmount;
         }
         return 0;
@@ -30,6 +31,7 @@ public class CutoffRule extends ITradeRule {
         if (cutOff > mSellValue) {
             float moneyValueRaw = DataMap.readFloat(DataMap.MONEY_VALUE_RAW);
             mActivated = true;
+            ConfigurationConstants.setCutoffLow(0f);
             float buyAmount = checkAmount(moneyValueRaw / mBuyValue);
             return buyAmount;
         }
@@ -42,6 +44,7 @@ public class CutoffRule extends ITradeRule {
             ConfigurationConstants.setEnabledBalancedRule(false);
             DataMap.writeString(DataMap.NOTIFICATION_CONTENT, "CUT OFF ACTIVATED");
             System.out.println("CUT OFF ACTIVATED -> turn off balanced rule");
+
         }
     }
 

@@ -90,7 +90,9 @@ public class ConfigurationConstants {
     public static boolean setEnabledBalancedRule(boolean onOff) {
         return setPreferenceBoolean(ENABLE_BALANCED, onOff);
     }
-
+    public static boolean setEnabledCufOff(boolean onOff) {
+        return setPreferenceBoolean(ENABLE_CUTOFF, onOff);
+    }
     public static boolean getEnabledBalancedRule() {
         return getPreferenceBoolean(ENABLE_BALANCED, false);
     }
@@ -108,6 +110,13 @@ public class ConfigurationConstants {
         return getPreferenceFloat(LOW_CUT, -99999999999f);
     }
 
+    public static boolean setCutoffHigh(Float value) {
+        return setPreferenceFloat(HIGH_CUT, value);
+    }
+
+    public static boolean setCutoffLow(Float value) {
+        return setPreferenceFloat(LOW_CUT, value);
+    }
 
     private static float getPreferenceFloat(String key, Float defaultValue) {
         String value = defaultValue.toString();
@@ -144,4 +153,14 @@ public class ConfigurationConstants {
         MyLog.d(ConfigurationConstants.class, key + " : " + value);
         return value;
     }
+
+    private static boolean setPreferenceFloat(String key, Float value) {
+        if (mContext != null) {
+             PreferenceManager.getDefaultSharedPreferences(mContext).edit().putFloat(key, value).commit();
+        }
+        MyLog.d(ConfigurationConstants.class, key + " : " + value);
+        syncSettingsToDataMap();
+        return true;
+    }
+
 }
