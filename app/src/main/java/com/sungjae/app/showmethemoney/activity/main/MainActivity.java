@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         super.onResume();
         syncSettingsToDataMap();
         updateView();
+        graph.refresh();
     }
 
     @Override
@@ -121,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             mAvailMoney = (int) intent.getFloatExtra("realMoneyAvailable", 0.f);
 
             updateView();
+            graph.add(( mBuy+mSell)/2) ;
         }
     };
 
@@ -186,6 +188,5 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
         ((TextView) findViewById(R.id.krw2)).setText("총 현금 : " + (int) mRealMoney);
         mPresenter.reloadList();
 
-        graph.add(( mBuy+mSell)/2) ;
     }
 }

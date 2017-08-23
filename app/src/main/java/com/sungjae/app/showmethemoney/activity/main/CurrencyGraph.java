@@ -12,7 +12,10 @@ import com.sungjae.app.showmethemoney.activity.setting.ConfigurationConstants;
 import com.sungjae.app.showmethemoney.log.MyLog;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by bennj on 2017-08-23.
@@ -35,8 +38,25 @@ public class CurrencyGraph {
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(0);
         graph.getViewport().setMaxX(MAX);
+        graph.getGridLabelRenderer().setNumHorizontalLabels(0);
+        this.graph=graph;
     }
 
+    public void refresh()
+    {
+        graph.removeAllSeries();
+        series = new LineGraphSeries<>(readCurrencyHistory());
+        graph.addSeries(series);
+
+    }
+    private String getTime() {
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        return formatter.format(new Date());
+    }
+    private String getTime(Long date) {
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+        return formatter.format(date);
+    }
     public void add(float currency)
     {
         MyLog.d(ctx,"GRAPH_ADD = "+currency);
@@ -49,15 +69,16 @@ public class CurrencyGraph {
         ContentResolver cr = ctx.getContentResolver();
 
         Uri uri = Uri.parse("content://trade/currency");
-        try (Cursor cursor = cr.query(uri, null, "coin = ?", new String[]{ConfigurationConstants.getCurrency()}, "date asc limit 0,"+MAX)) {
-            if (cursor.moveToFirst()) {
+        try (Cursor cursor = cr.query(uri, null, "coin = ?", new String[]{ConfigurationConstants.getCurrency()}, "date desc limit 0,"+MAX)) {
+            if (cursor.moveToLast()) {
 
-                while (cursor.isLast() == false) {
-                    //before = cursor.getLong(cursor.getColumnIndex("date"));
+                while (cursor.isBeforeFirst() == false) {
+                    Long before = cursor.getLong(cursor.getColumnIndex("date"));
                     currency = (cursor.getFloat(cursor.getColumnIndex("sell")) + cursor.getFloat(cursor.getColumnIndex("buy"))) / 2;
                     if(currency==0) continue;
+                    MyLog.d(ctx,"GRAPH_INIT = ["+getTime(before)+"] "+currency);
                     dps.add(new DataPoint(idx++, currency));
-                    cursor.moveToNext();
+                    cursor.moveToPrevious();
                 }
             }
         }
