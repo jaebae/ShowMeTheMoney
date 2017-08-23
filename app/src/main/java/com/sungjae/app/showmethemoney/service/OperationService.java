@@ -42,7 +42,7 @@ import static com.sungjae.app.showmethemoney.activity.setting.ConfigurationConst
 
 
 public class OperationService extends Service {
-    private final static String COIN = ConfigurationConstants.getCurrency();
+    private static String COIN = ConfigurationConstants.getCurrency().toUpperCase();
     ApiWrapper mApi = new ApiWrapper(COIN);
 
     public OperationService() {
@@ -62,12 +62,21 @@ public class OperationService extends Service {
 
     protected Handler mHandler;
 
+    private void updateCOIN() {
+        String newCOIN = ConfigurationConstants.getCurrency().toUpperCase();
+        if (newCOIN.equals(COIN) == false) {
+            COIN = ConfigurationConstants.getCurrency().toUpperCase();
+            mApi = new ApiWrapper(COIN);
+        }
+    }
+
     @NonNull
     private Handler getHandler() {
         mHandler = new Handler(getLooperHandlerThread()) {
             @Override
             public void handleMessage(Message msg) {
                 removeMessages(0);
+                updateCOIN();
                 doOperation();
                 sendEmptyMessageDelayed(0, 30000);
             }
