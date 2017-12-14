@@ -41,16 +41,16 @@ public class TradeModel implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         String projection[] = new String[]{
-                "date",
+                "STRFTIME ('%m-%d %H:%M', date / 1000, 'unixepoch', 'localtime') as strdate",
                 "coin",
                 "trade",
-                "unit",
-                "price",
-                "amount",
+                "sum(unit) as avgUnit",
+                "sum(amount)/sum(unit) as avgPrice",
+                "sum(amount) as totAmount",
                 "_id"
         };
 
-        return new CursorLoader(mContext, Uri.parse("content://trade/trade"), projection, null,
+        return new CursorLoader(mContext, Uri.parse("content://trade/trade"), projection, " 1 group by strdate",
                 null, "_id desc");
     }
 

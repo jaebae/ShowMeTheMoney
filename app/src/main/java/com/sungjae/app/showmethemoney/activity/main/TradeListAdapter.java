@@ -34,7 +34,7 @@ public class TradeListAdapter extends ResourceCursorAdapter {
         TextView priceView = (TextView) view.findViewById(R.id.price);
         TextView amountView = (TextView) view.findViewById(R.id.amount);
 
-        dateView.setText(getLongToTime(context, cursor.getLong(0)));
+        dateView.setText(cursor.getString(0));
         typeView.setText(cursor.getString(1));
         tradeView.setText(cursor.getString(2));
         //unitView.setText(trimNumber(cursor.getString(3)));

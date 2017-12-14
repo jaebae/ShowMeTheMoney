@@ -51,7 +51,7 @@ class BalancingRule extends ITradeRule {
         MyLog.d(this, "expectedCoinValue = " + expectedCoinValue);
         //30 -> coin, money will be 70
         //money+bit == 100;
-        //expected con = total * 0.3
+        //expected con = total * 0.30
 
 
         if (diff != 0) {
