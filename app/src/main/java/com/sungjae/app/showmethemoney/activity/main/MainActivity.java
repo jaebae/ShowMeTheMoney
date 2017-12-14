@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             updateView();
             //graph.refresh();
 
-            graph.add(( mBuy+mSell)/2) ;
+            graph.add((mBuy + mSell) / 2);
         }
     };
 
@@ -152,10 +152,10 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
 
         tv = (TextView) findViewById(R.id.bit_as_sell);
         float bitMoney = mBitMoney * mSell;
-        float total = bitMoney + mAvailMoney;
+        float total = bitMoney + mRealMoney;
 
         float investRate = DataMap.readFloat(SettingFragment.SETTING_HEADER + ConfigurationConstants.INVEST_RATE);
-        float expectedCoinValue = total * investRate;
+        float expectedCoinValue = (bitMoney + mAvailMoney) * investRate;
         float diff = expectedCoinValue - bitMoney;
         float percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
             tv.setTextColor(Color.BLUE);
         }
         bitMoney = mBitMoney * mBuy;
-        total = bitMoney + mAvailMoney;
+        total = bitMoney + mRealMoney;
         diff = expectedCoinValue - bitMoney;
         percent = (diff / Math.min(mAvailMoney, bitMoney)) * 100.f;
         float totalInput = ConfigurationConstants.getTotalInput();
@@ -185,9 +185,9 @@ public class MainActivity extends AppCompatActivity implements TradeViewInterfac
 //        tv = (TextView) findViewById(R.id.krw);
 //        tv.setText("가용 현금 : " + (int) mAvailMoney+" / 총 현금 : " +(int) mRealMoney+" / 보관금 : " +(int) (mRealMoney-mAvailMoney));
 
-        ((TextView) findViewById(R.id.krw)).setText("가용 현금 : " + (int) mAvailMoney);
-        ((TextView) findViewById(R.id.krw3)).setText("보관금 : " + (int) (mRealMoney - mAvailMoney));
-        ((TextView) findViewById(R.id.krw2)).setText("총 현금 : " + (int) mRealMoney);
+        ((TextView) findViewById(R.id.krw)).setText("운용:" + (int) mAvailMoney);
+        ((TextView) findViewById(R.id.krw3)).setText("가상:" + (int) (mAvailMoney - mRealMoney));
+        ((TextView) findViewById(R.id.krw2)).setText("현금: " + (int) mRealMoney);
         mPresenter.reloadList();
 
     }

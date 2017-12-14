@@ -35,7 +35,7 @@ public class MoneyKeeper implements IDataUpdater {
             MyLog.e(this, "not enough money = " + (mRequestToKeep - mRawMoney));
         }
 
-        Float availMoney = mRawMoney - mRequestToKeep;
+        Float availMoney = mRawMoney + mRequestToKeep;
         DataMap.writeFloat(DataMap.MONEY_VALUE_AVAIL, availMoney);
         Float availTotal = availMoney + mCoinValue;
         DataMap.writeFloat(DataMap.TOTAL_VALUE_AVAIL, availTotal);
