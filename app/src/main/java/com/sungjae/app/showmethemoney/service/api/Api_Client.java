@@ -69,11 +69,8 @@ public class Api_Client {
                 request.readTimeout(10000);
             }
 
-            if (request.ok()) {
-                response = request.body();
-            } else {
-                response = "error : " + request.code() + ", message : " + request.body();
-            }
+
+            response = request.body();
             request.disconnect();
         }
 
@@ -151,7 +148,6 @@ public class Api_Client {
 
     @SuppressWarnings("unchecked")
     public String callApi(String endpoint, HashMap<String, String> params) throws Exception {
-        String rgResultDecode = "";
         HashMap<String, String> rgParams = new HashMap<String, String>();
         rgParams.put("endpoint", endpoint);
 
@@ -162,19 +158,21 @@ public class Api_Client {
         String api_host = api_url + endpoint;
         HashMap<String, String> httpHeaders = getHttpHeaders(endpoint, rgParams, api_key, api_secret);
 
-        rgResultDecode = request(api_host, "POST", rgParams, httpHeaders);
+        String rgResultDecode = request(api_host, "POST", rgParams, httpHeaders);
+        // json �Ľ�
+        HashMap<String, String> result;
 
-        if (!rgResultDecode.startsWith("error")) {
-            // json �Ľ�
-            HashMap<String, String> result;
-            try {
-                result = new ObjectMapper().readValue(rgResultDecode, HashMap.class);
-            } catch (IOException e) {
-                e.printStackTrace();
+        try {
+            result = new ObjectMapper().readValue(rgResultDecode, HashMap.class);
+            Object status = result.get("status");
+
+            if (!status.toString().equals("0000")) {
+                throw new Exception(result.get("message"));
             }
-        } else {
-            throw new Exception("api error\n" + rgResultDecode);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return rgResultDecode;
     }
 }
